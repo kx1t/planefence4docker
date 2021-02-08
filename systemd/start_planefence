@@ -77,13 +77,14 @@ fi
 # -----------------------------------------------------------------------------------
 #
 #--------------------------------------------------------------------------------
-# Now start dump1090.socket30003 by adding its crontab:
+# Now start dump1090.socket30003 and add a crontab:
+/home/pi/sock30003/socket30003.pl &
 echo "*/5 * * * * s  /home/pi/sock30003/socket30003.pl" | crontab -
 #
 #--------------------------------------------------------------------------------
 # Now loop forever
 while true
 do
-	$PLANEFENCEDIR/planefence.sh >/tmp/planefence.log
+	$PLANEFENCEDIR/planefence.sh >>$LOGFILE
 	sleep $LOOPTIME
 done
