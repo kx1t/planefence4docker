@@ -56,7 +56,7 @@ if [ -f "$PLANEFENCEDIR/planefence.conf" ]
 then
 	source "$PLANEFENCEDIR/planefence.conf"
 else
-	echo $PLANEFENCEDIR/planefence.conf is missing. We need it to run PlaneFence! Go back to GitHub and get it from there!
+	echo $PLANEFENCEDIR/planefence.conf is missing. We need it to run PlaneFence!
 	exit 2
 fi
 

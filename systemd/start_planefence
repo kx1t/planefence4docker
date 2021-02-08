@@ -1,56 +1,89 @@
-#!/bin/bash
-# START_PLANEFENCE - a Bash shell script to run PlaneFence in a loop
-# This script is invoked by the SystemD service that keeps PlaneFence up and running
-# 
-# The reasons for using SystemD over CRON are several, and include
-# easy of use and management
-#
-# To start/stop/install PlaneFence, do the following:
-#
-# 1 Base enablement of the PlaneFence Service from your GitHub cache:
-# 	sudo cp ~/git/planefence/service/planefence.service /lib/systemd/system/
-# 	sudo systemctl daemon-reload
-# 	sudo systemctl enable planefence
-#
-# 2 Manually starting or stopping the service:
-#	sudo systemctl start planefence
-#	sudo systemctl stop planefence
-#
-# 3 Ensuring that the service is reloaded on reboot / stopping it from reloading on reboot:
-#	sudo systemctl enable planefence
-#	sudo systemctl disable planefence
-#
-# 4 Checking the status of the PlaneFence service:
-#	systemctl status planefence
-#
-# 5 Looking at the PlaneFence logs:
-#	tail -n100 -f /tmp/planefence.log
-#
+#!/usr/bin/env bash
+#shellcheck shell=bash
+
+APPNAME="planefence"
+
+echo "[$APPNAME] PlaneFence deployment started"
+
 # -----------------------------------------------------------------------------------
-# Copyright 2020 Ramon F. Kolb - licensed under the terms and conditions
+# Copyright 2020, 2021 Ramon F. Kolb - licensed under the terms and conditions
 # of GPLv3. The terms and conditions of this license are included with the Github
 # distribution of this package, and are also available here:
-# https://github.com/kx1t/planefence/
+# https://github.com/kx1t/planefence4docker/
 #
 # The package contains parts of, and modifications or derivatives to the following:
 # Dump1090.Socket30003 by Ted Sluis: https://github.com/tedsluis/dump1090.socket30003
 # These packages may incorporate other software and license terms.
 #
 # -----------------------------------------------------------------------------------
-# Feel free to make changes to the variables between these two lines. However, it is
-# STRONGLY RECOMMENDED to RTFM! See README.md for explanation of what these do.
-#
 # LOOPTIME is the time between two runs of PlaneFence (in seconds)
-# Do not set this to less than about 120 seconds as it will overload your system
-LOOPTIME=80
+[ "$PF_INTERVAL" != "" ] && LOOPTIME=$PF_INTERVAL || LOOPTIME=120
 #
-# PLANEFENCEDIR contains the directory where planefence.sh is location 
+# PLANEFENCEDIR contains the directory where planefence.sh is location
 PLANEFENCEDIR=/usr/share/planefence
 # -----------------------------------------------------------------------------------
+#
+# Set logging in planefence.conf:
+#
+if [ "$PF_LOG" == "off" ]
+then
+	LOGFILE=/dev/null
+	sed -i 's/\(^\s*VERBOSE=\).*/\1'""'/' /usr/share/planefence/planefence.conf
+else
+	[ "$PF_LOG" == "" ] && LOGFILE="/tmp/planefence.log" || LOGFILE="$PF_LOG"
+fi
+sed -i 's/\(^\s*LOGFILE=\).*/\1'"$LOGFILE"'/' /usr/share/planefence/planefence.conf
+# -----------------------------------------------------------------------------------
+#
+# read the environment variables and put them in the planefence.conf file:
+[ "$FEEDER_LAT" != "" ] && sed -i 's/\(^\s*LAT=\).*/\1'"$FEEDER_LAT"'/' /usr/share/planefence/planefence.conf || { echo "Error - \$FEEDER_LAT not defined"; exit 1;}
+[ "$FEEDER_LON" != "" ] && sed -i 's/\(^\s*LON=\).*/\1'"$FEEDER_LON"'/' /usr/share/planefence/planefence.conf || { echo "Error - \$FEEDER_LON not defined"; exit 1;}
+[ "$PF_MAXALT" != "" ] && sed -i 's/\(^\s*MAXALT=\).*/\1'"$PF_MAXALT"'/' /usr/share/planefence/planefence.conf
+[ "$PF_MAXDIST" != "" ] && sed -i 's/\(^\s*DIST=\).*/\1'"$PF_MAXDIST"'/' /usr/share/planefence/planefence.conf
+[ "$PF_NAME" != "" ] && sed -i 's/\(^\s*MY=\).*/\1'"$PF_NAME"'/' /usr/share/planefence/planefence.conf
+[ "$PF_MAPURL" != "" ] && sed -i 's/\(^\s*MYURL=\).*/\1'"$PF_MAPURL"'/' /usr/share/planefence/planefence.conf
+[ "$PF_TWEET" != "" ] && sed -i 's/\(^\s*PLANETWEET=\).*/\1'"$PF_TWEET"'/' /usr/share/planefence/planefence.conf
+# -----------------------------------------------------------------------------------
+#
+# same for planeheat.sh
+sed -i 's/\(^\s*LAT=\).*/\1'"$FEEDER_LAT"'/' /usr/share/planefence/planeheat.sh
+sed -i 's/\(^\s*LON=\).*/\1'"$FEEDER_LON"'/' /usr/share/planefence/planeheat.sh
+[ "$PF_MAXALT" != "" ] && sed -i 's/\(^\s*MAXALT=\).*/\1'"$PF_MAXALT"'/' /usr/share/planefence/planeheat.sh
+[ "$PF_MAXDIST" != "" ] && sed -i 's/\(^\s*DIST=\).*/\1'"$PF_MAXDIST"'/' /usr/share/planefence/planeheat.sh
+# -----------------------------------------------------------------------------------
+#
+# same for socket30003.conf
+sed -i 's/\(^\s*latitude=\).*/\1'"$FEEDER_LAT"'/' /usr/share/socket30003/socket30003.cfg
+sed -i 's/\(^\s*longitude=\).*/\1'"$FEEDER_LON"'/' /usr/share/socket30003/socket30003.cfg
 
+if [ "$PF_DISTUNIT" =! "" ]
+then
+	sed -i 's/\(^\s*distanceunit=\).*/\1'"$PF_DISTUNIT"'/' /usr/share/socket30003/socket30003.cfg
+else
+	sed -i 's/\(^\s*distanceunit=\).*/\1nauticalmile/' /usr/share/socket30003/socket30003.cfg
+fi
+if [ "$PF_ALTUNIT" =! "" ]
+then
+	sed -i 's/\(^\s*altitudeunit=\).*/\1'"$PF_ALTUNIT"'/' /usr/share/socket30003/socket30003.cfg
+else
+	sed -i 's/\(^\s*altitudeunit=\).*/\1feet/' /usr/share/socket30003/socket30003.cfg
+fi
+if [ "$PF_SPEEDUNIT" =! "" ]
+then
+	sed -i 's/\(^\s*speedunit=\).*/\1'"$PF_SPEEDUNIT"'/' /usr/share/socket30003/socket30003.cfg
+else
+	sed -i 's/\(^\s*speedunit=\).*/\1knotph/' /usr/share/socket30003/socket30003.cfg
+fi
+# -----------------------------------------------------------------------------------
+#
+#--------------------------------------------------------------------------------
+# Now start dump1090.socket30003 by adding its crontab:
+echo "*/5 * * * * s  /home/pi/sock30003/socket30003.pl -data /run/socket30003 -log /run/socket30003 -pid /run/socket30003 " | crontab -
+#
+#--------------------------------------------------------------------------------
+# Now loop forever
 while true
 do
 	$PLANEFENCEDIR/planefence.sh >/tmp/planefence.log
 	sleep $LOOPTIME
 done
-
