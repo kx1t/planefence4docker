@@ -1,3 +1,7 @@
+# WARNING !!!
+This version of PlaneFence contains updates that are specific to make it run inside a Docker Container. 
+If you do not want to run this inside docker, please go to https://github.com/kx1t/planefence
+
 # PlaneFence
 Collection of scripts using Socket30003 logs to create a list of aircraft that fly low over your location.
 Copyright 2020 by Ramon F. Kolb - Licensed under GPL3.0 - see separate license file.
@@ -14,31 +18,6 @@ This documentation is for PlaneFence v3.12. For a summary of changes since v1, s
 
 What does this mean for you? Follow the installation instructions and you should be good :)
 
-## Installation
-
-Follow the following steps in order.
-
-### Prerequisites
-1. These instructions assume that you already have a relatively standard installation of dump1090, dump1090-fa, dump1090-mutability, or the equivalent dump978 on your Raspberry Pi. If you don't have this, Google "FlightAware feeder", "Radarbox24 feeder", or something similar to get started. Get a RPi 3B+ or 4, an RTL-SDR dongle, an antenna, and come back here when you can access a map with aircraft flying over your home.
-2. You should feel somewhat comfortable installing and configuring software on a Raspberry Pi or a similar Linux system using Github. You will be making modifications to your system, and there is a chance you screw things up. You do so at your own risk.
-3. Feel free to inspect the installation scripts. It's generally a good security practice to make sure you understand and agree what they are doing, before you run a script written by a stranger on your machine. 
-
-
-### Note - don't (ever!) install as user `root`
-When you follow the instructions below, I strongly recommend to install all software and scripts as user `pi` and NOT as user `root`. Reasons for this include general system security, but also - once you run PlaneFence as `root`, it will create files that cannot be read or overwritten by any other user, and this stops your ability to run `PlaneFence` as user `pi` in the future.
-So, please stick with user `pi`.
-
-
-### AUTO-INSTALLATION
-You can automatically install and configure PlaneFence by logging into your Raspberry Pi as user `pi`, and then copying / pasting the following line:
-
-```
-bash -c "$(wget -q -O - https://raw.githubusercontent.com/kx1t/planefence/master/install_planefence.sh)"
-```
-
-Note -- if `dump1090.socket30003` isn't already installed and running, this install script will also attempt to install that package.
-
-If you come across any errors, please let us know. You can resolve them by following the manual instructions described in README-manual-install.md
 
 # Seeing your PlaneFence page
 Once the app is running, you can find the results at `http://<address_of_rpi>/planefence`. Give it a few minutes after installation!
@@ -46,6 +25,7 @@ Replace `<address_of_rpi>` with whatever the address is you normally use to get 
 For reference, see (http://planefence.ramonk.net).
 
 # Optional - Tweeting Your Updates
+(not yet implemented)
 Once you have PlaneFence completely up and running, you can add an option to send a Tweet for every overflying plane.
 The setup of this is a bit complicated as you will have to register your own Twitter Developer Account, and get a 
 App Key for your application.
@@ -54,25 +34,10 @@ https://github.com/kx1t/planefence/blob/master/README-twitter.md
 
 If you want to see an example of how this works, go here: https://twitter.com/PlaneBoston
 
-# catchup.sh
-
-This script will do a "catch-up" run. You should use this sparingly - under normal circumstances, you will never need it. It will iterate through all `/tmp/dump1090*.txt` files and create PlaneFence pages for them.
-Usage: `/usr/share/planefence/catchup.sh [days]`
-Example: `/usr/share/planefence/catchup.sh 1`
-The optional `days` argument indicates how many days of history the script will generate, with "1" being today, and "8" being today + the previous 7 days. The script will skip those days for which there is no data available.
-
 # Known Issues
 - Planes that are seen multiple times during consecutive runs, may show up multiple times
 - The script hasn't been thoroughly tested. Please provide feedback and exerpts of /tmp/planefence.log that show the activites around the time the issues occurred.
 - The code is a bit messy and at times, disorganized. However, it's overly documented and should be easy to understand and adapt.
-
-# Uninstalling PlaneFence
-
-You can automatically uninstall PlaneFence and its dependencies by logging into your Raspberry Pi as user `pi`, and then copying / pasting the following line:
-
-```
-bash -c "$(wget -q -O - https://raw.githubusercontent.com/kx1t/planefence/master/uninstall_planefence.sh)"
-```
 
 # Summary of License Terms
 This program is free software: you can redistribute it and/or modify
