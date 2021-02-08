@@ -78,7 +78,7 @@ fi
 #
 #--------------------------------------------------------------------------------
 # Now start dump1090.socket30003 by adding its crontab:
-echo "*/5 * * * * s  /home/pi/sock30003/socket30003.pl -data /run/socket30003 -log /run/socket30003 -pid /run/socket30003 " | crontab -
+echo "*/5 * * * * s  /home/pi/sock30003/socket30003.pl" | crontab -
 #
 #--------------------------------------------------------------------------------
 # Now loop forever
