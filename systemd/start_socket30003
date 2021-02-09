@@ -46,6 +46,7 @@ fi
 
 #--------------------------------------------------------------------------------
 # Now start dump1090.socket30003 in a loop that restarts it $LOOPTIME seconds after it exits or crashes:
+echo "[$APPNAME] socket30003 starting its initial run now"
 while true
 do
   /usr/share/socket30003/socket30003.pl
