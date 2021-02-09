@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/with-contenv bash
 #shellcheck shell=bash
 
 APPNAME="planefence"
@@ -86,8 +86,8 @@ fi
 #
 #--------------------------------------------------------------------------------
 # Now start dump1090.socket30003 and add a crontab:
-/usr/share/sock30003/socket30003.pl &
-echo "*/5 * * * * s  /usr/share/sock30003/socket30003.pl" | crontab -
+/usr/share/socket30003/socket30003.pl &
+echo "*/5 * * * * s  /usr/share/socket30003/socket30003.pl" | crontab -
 #
 #--------------------------------------------------------------------------------
 # Now loop forever
