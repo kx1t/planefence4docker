@@ -34,19 +34,19 @@ else
 	[[ "x$PF_LOG" == "x" ]] && LOGFILE="/tmp/planefence.log" || LOGFILE="$PF_LOG"
 fi
 echo pflog=$PF_LOG and logfile=$LOGFILE
-sed -i 's/\(^\s*LOGFILE=\).*/\1'"$LOGFILE"'/' /usr/share/planefence/planefence.conf
+sed -i 's|\(^\s*LOGFILE=\).*|\1'"$LOGFILE"'|' /usr/share/planefence/planefence.conf
 
 echo step 1
 
 # -----------------------------------------------------------------------------------
 #
 # read the environment variables and put them in the planefence.conf file:
-[[ "x$FEEDER_LAT" != "x" ]] && sed -i 's/\(^\s*LAT=\).*/\1'"$FEEDER_LAT"'/' /usr/share/planefence/planefence.conf || { echo "Error - \$FEEDER_LAT ($FEEDER_LAT) not defined"; exit 1;}
-[[ "x$FEEDER_LONG" != "x" ]] && sed -i 's/\(^\s*LON=\).*/\1'"$FEEDER_LONG"'/' /usr/share/planefence/planefence.conf || { echo "Error - \$FEEDER_LONG not defined"; exit 1;}
+[[ "x$FEEDER_LAT" != "x" ]] && sed -i 's/\(^\s*LAT=\).*/\1'"$FEEDER_LAT"'/' /usr/share/planefence/planefence.conf || { echo "Error - \$FEEDER_LAT ($FEEDER_LAT) not defined"; exit 1; }
+[[ "x$FEEDER_LONG" != "x" ]] && sed -i 's/\(^\s*LON=\).*/\1'"$FEEDER_LONG"'/' /usr/share/planefence/planefence.conf || { echo "Error - \$FEEDER_LONG not defined"; exit 1; }
 [[ "x$PF_MAXALT" != "x" ]] && sed -i 's/\(^\s*MAXALT=\).*/\1'"$PF_MAXALT"'/' /usr/share/planefence/planefence.conf
 [[ "x$PF_MAXDIST" != "x" ]] && sed -i 's/\(^\s*DIST=\).*/\1'"$PF_MAXDIST"'/' /usr/share/planefence/planefence.conf
 [[ "x$PF_NAME" != "x" ]] && sed -i 's/\(^\s*MY=\).*/\1'"$PF_NAME"'/' /usr/share/planefence/planefence.conf
-[[ "x$PF_MAPURL" != "x" ]] && sed -i 's/\(^\s*MYURL=\).*/\1'"$PF_MAPURL"'/' /usr/share/planefence/planefence.conf
+[[ "x$PF_MAPURL" != "x" ]] && sed -i 's|\(^\s*MYURL=\).*|\1'"$PF_MAPURL"'|' /usr/share/planefence/planefence.conf
 [[ "x$PF_TWEET" != "x" ]] && sed -i 's/\(^\s*PLANETWEET=\).*/\1'"$PF_TWEET"'/' /usr/share/planefence/planefence.conf
 # -----------------------------------------------------------------------------------
 #
@@ -86,8 +86,8 @@ fi
 #
 #--------------------------------------------------------------------------------
 # Now start dump1090.socket30003 and add a crontab:
-/home/pi/sock30003/socket30003.pl &
-echo "*/5 * * * * s  /home/pi/sock30003/socket30003.pl" | crontab -
+/usr/share/sock30003/socket30003.pl &
+echo "*/5 * * * * s  /usr/share/sock30003/socket30003.pl" | crontab -
 #
 #--------------------------------------------------------------------------------
 # Now loop forever
