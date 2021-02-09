@@ -23,25 +23,27 @@ LOOPTIME=30
 # set params in socket30003.conf
 sed -i 's/\(^\s*latitude=\).*/\1'"$FEEDER_LAT"'/' /usr/share/socket30003/socket30003.cfg
 sed -i 's/\(^\s*longitude=\).*/\1'"$FEEDER_LONG"'/' /usr/share/socket30003/socket30003.cfg
+[[ "x$PF_SOCK30003HOST" != "x" ]] && sed -i 's|\(^\s*PEER_HOST=\).*|\1'"$PF_SOCK30003HOST"'|' /usr/share/socket30003/socket30003.cfg
 
-if [[ "$PF_DISTUNIT" != "" ]]
+if [[ "x$PF_DISTUNIT" != "x" ]]
 then
 	sed -i 's/\(^\s*distanceunit=\).*/\1'"$PF_DISTUNIT"'/' /usr/share/socket30003/socket30003.cfg
 else
 	sed -i 's/\(^\s*distanceunit=\).*/\1nauticalmile/' /usr/share/socket30003/socket30003.cfg
 fi
-if [[ "$PF_ALTUNIT" != "" ]]
+if [[ "x$PF_ALTUNIT" != "x" ]]
 then
 	sed -i 's/\(^\s*altitudeunit=\).*/\1'"$PF_ALTUNIT"'/' /usr/share/socket30003/socket30003.cfg
 else
 	sed -i 's/\(^\s*altitudeunit=\).*/\1feet/' /usr/share/socket30003/socket30003.cfg
 fi
-if [[ "$PF_SPEEDUNIT" != "" ]]
+if [[ "x$PF_SPEEDUNIT" != "x" ]]
 then
 	sed -i 's/\(^\s*speedunit=\).*/\1'"$PF_SPEEDUNIT"'/' /usr/share/socket30003/socket30003.cfg
 else
 	sed -i 's/\(^\s*speedunit=\).*/\1knotph/' /usr/share/socket30003/socket30003.cfg
 fi
+
 # -----------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------
