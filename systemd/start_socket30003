@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv bash
 #shellcheck shell=bash
 
-APPNAME="dump30003"
+APPNAME="socket30003"
 
 echo "[$APPNAME] Socket30003 deployment started"
 
@@ -49,5 +49,7 @@ fi
 while true
 do
   /usr/share/socket30003/socket30003.pl
+	echo "[$APPNAME] socket30003 has exited... restarting in $LOOPTIME"
 	sleep $LOOPTIME
+	echo "[$APPNAME] socket30003 restarting now"
 done

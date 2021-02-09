@@ -65,6 +65,7 @@ sleep $LOOPTIME
 while true
 do
 	$PLANEFENCEDIR/planefence.sh >>$LOGFILE
+	echo "[$APPNAME] PlaneFence has exited... restarting in $LOOPTIME"
 	sleep $LOOPTIME
+	echo "[$APPNAME] PlaneFence restarting now" 
 done
-
