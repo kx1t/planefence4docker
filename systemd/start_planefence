@@ -17,7 +17,7 @@ echo "[$APPNAME] PlaneFence deployment started"
 #
 # -----------------------------------------------------------------------------------
 # LOOPTIME is the time between two runs of PlaneFence (in seconds)
-[ "$PF_INTERVAL" != "" ] && LOOPTIME=$PF_INTERVAL || LOOPTIME=120
+[[ "$PF_INTERVAL" != "" ]] && LOOPTIME=$PF_INTERVAL || LOOPTIME=120
 #
 # PLANEFENCEDIR contains the directory where planefence.sh is location
 PLANEFENCEDIR=/usr/share/planefence
@@ -25,50 +25,58 @@ PLANEFENCEDIR=/usr/share/planefence
 #
 # Set logging in planefence.conf:
 #
-if [ "$PF_LOG" == "off" ]
+if [[ "$PF_LOG" == "off" ]]
 then
+	echo 0a
 	LOGFILE=/dev/null
 	sed -i 's/\(^\s*VERBOSE=\).*/\1'""'/' /usr/share/planefence/planefence.conf
 else
-	[ "$PF_LOG" == "" ] && LOGFILE="/tmp/planefence.log" || LOGFILE="$PF_LOG"
+	[[ "x$PF_LOG" == "x" ]] && LOGFILE="/tmp/planefence.log" || LOGFILE="$PF_LOG"
 fi
+echo pflog=$PF_LOG and logfile=$LOGFILE
 sed -i 's/\(^\s*LOGFILE=\).*/\1'"$LOGFILE"'/' /usr/share/planefence/planefence.conf
+
+echo step 1
+
 # -----------------------------------------------------------------------------------
 #
 # read the environment variables and put them in the planefence.conf file:
-[ "$FEEDER_LAT" != "" ] && sed -i 's/\(^\s*LAT=\).*/\1'"$FEEDER_LAT"'/' /usr/share/planefence/planefence.conf || { echo "Error - \$FEEDER_LAT not defined"; exit 1;}
-[ "$FEEDER_LON" != "" ] && sed -i 's/\(^\s*LON=\).*/\1'"$FEEDER_LON"'/' /usr/share/planefence/planefence.conf || { echo "Error - \$FEEDER_LON not defined"; exit 1;}
-[ "$PF_MAXALT" != "" ] && sed -i 's/\(^\s*MAXALT=\).*/\1'"$PF_MAXALT"'/' /usr/share/planefence/planefence.conf
-[ "$PF_MAXDIST" != "" ] && sed -i 's/\(^\s*DIST=\).*/\1'"$PF_MAXDIST"'/' /usr/share/planefence/planefence.conf
-[ "$PF_NAME" != "" ] && sed -i 's/\(^\s*MY=\).*/\1'"$PF_NAME"'/' /usr/share/planefence/planefence.conf
-[ "$PF_MAPURL" != "" ] && sed -i 's/\(^\s*MYURL=\).*/\1'"$PF_MAPURL"'/' /usr/share/planefence/planefence.conf
-[ "$PF_TWEET" != "" ] && sed -i 's/\(^\s*PLANETWEET=\).*/\1'"$PF_TWEET"'/' /usr/share/planefence/planefence.conf
+[[ "x$FEEDER_LAT" != "x" ]] && sed -i 's/\(^\s*LAT=\).*/\1'"$FEEDER_LAT"'/' /usr/share/planefence/planefence.conf || { echo "Error - \$FEEDER_LAT ($FEEDER_LAT) not defined"; exit 1;}
+[[ "x$FEEDER_LONG" != "x" ]] && sed -i 's/\(^\s*LON=\).*/\1'"$FEEDER_LONG"'/' /usr/share/planefence/planefence.conf || { echo "Error - \$FEEDER_LONG not defined"; exit 1;}
+[[ "x$PF_MAXALT" != "x" ]] && sed -i 's/\(^\s*MAXALT=\).*/\1'"$PF_MAXALT"'/' /usr/share/planefence/planefence.conf
+[[ "x$PF_MAXDIST" != "x" ]] && sed -i 's/\(^\s*DIST=\).*/\1'"$PF_MAXDIST"'/' /usr/share/planefence/planefence.conf
+[[ "x$PF_NAME" != "x" ]] && sed -i 's/\(^\s*MY=\).*/\1'"$PF_NAME"'/' /usr/share/planefence/planefence.conf
+[[ "x$PF_MAPURL" != "x" ]] && sed -i 's/\(^\s*MYURL=\).*/\1'"$PF_MAPURL"'/' /usr/share/planefence/planefence.conf
+[[ "x$PF_TWEET" != "x" ]] && sed -i 's/\(^\s*PLANETWEET=\).*/\1'"$PF_TWEET"'/' /usr/share/planefence/planefence.conf
 # -----------------------------------------------------------------------------------
 #
 # same for planeheat.sh
+
+echo step 2
+
 sed -i 's/\(^\s*LAT=\).*/\1'"$FEEDER_LAT"'/' /usr/share/planefence/planeheat.sh
-sed -i 's/\(^\s*LON=\).*/\1'"$FEEDER_LON"'/' /usr/share/planefence/planeheat.sh
-[ "$PF_MAXALT" != "" ] && sed -i 's/\(^\s*MAXALT=\).*/\1'"$PF_MAXALT"'/' /usr/share/planefence/planeheat.sh
-[ "$PF_MAXDIST" != "" ] && sed -i 's/\(^\s*DIST=\).*/\1'"$PF_MAXDIST"'/' /usr/share/planefence/planeheat.sh
+sed -i 's/\(^\s*LON=\).*/\1'"$FEEDER_LONG"'/' /usr/share/planefence/planeheat.sh
+[[ "x$PF_MAXALT" != "x" ]] && sed -i 's/\(^\s*MAXALT=\).*/\1'"$PF_MAXALT"'/' /usr/share/planefence/planeheat.sh
+[[ "x$PF_MAXDIST" != "x" ]] && sed -i 's/\(^\s*DIST=\).*/\1'"$PF_MAXDIST"'/' /usr/share/planefence/planeheat.sh
 # -----------------------------------------------------------------------------------
 #
 # same for socket30003.conf
 sed -i 's/\(^\s*latitude=\).*/\1'"$FEEDER_LAT"'/' /usr/share/socket30003/socket30003.cfg
-sed -i 's/\(^\s*longitude=\).*/\1'"$FEEDER_LON"'/' /usr/share/socket30003/socket30003.cfg
+sed -i 's/\(^\s*longitude=\).*/\1'"$FEEDER_LONG"'/' /usr/share/socket30003/socket30003.cfg
 
-if [ "$PF_DISTUNIT" =! "" ]
+if [[ "$PF_DISTUNIT" != "" ]]
 then
 	sed -i 's/\(^\s*distanceunit=\).*/\1'"$PF_DISTUNIT"'/' /usr/share/socket30003/socket30003.cfg
 else
 	sed -i 's/\(^\s*distanceunit=\).*/\1nauticalmile/' /usr/share/socket30003/socket30003.cfg
 fi
-if [ "$PF_ALTUNIT" =! "" ]
+if [[ "$PF_ALTUNIT" != "" ]]
 then
 	sed -i 's/\(^\s*altitudeunit=\).*/\1'"$PF_ALTUNIT"'/' /usr/share/socket30003/socket30003.cfg
 else
 	sed -i 's/\(^\s*altitudeunit=\).*/\1feet/' /usr/share/socket30003/socket30003.cfg
 fi
-if [ "$PF_SPEEDUNIT" =! "" ]
+if [[ "$PF_SPEEDUNIT" != "" ]]
 then
 	sed -i 's/\(^\s*speedunit=\).*/\1'"$PF_SPEEDUNIT"'/' /usr/share/socket30003/socket30003.cfg
 else
