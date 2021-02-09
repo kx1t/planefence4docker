@@ -3,7 +3,7 @@
 
 APPNAME="dump30003"
 
-echo "[$APPNAME] PlaneFence deployment started"
+echo "[$APPNAME] Socket30003 deployment started"
 
 # -----------------------------------------------------------------------------------
 # Copyright 2020, 2021 Ramon F. Kolb - licensed under the terms and conditions
