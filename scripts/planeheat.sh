@@ -27,7 +27,7 @@
 # Feel free to make changes to the variables between these two lines. However, it is
 # STRONGLY RECOMMENDED to RTFM! See README.md for explanation of what these do.
 # These are the input and output directories and file names:
-        OUTFILEDIR=/usr/share/dump1090-fa/html/planefence # the web directory you want PlaneFence to write to
+        OUTFILEDIR=/usr/share/planefence/html # the web directory you want PlaneFence to write to
         PLANEFENCEDIR=/usr/share/planefence # the directory where this file and planefence.py are located
         MAXALT=5000 # only planes below this altitude are reported. Must correspond to your socket30003 altitude unit
         DIST=2 # only planes closer than this distance are reported. If CALCDIST (below) is set to "--calcdist", then the distance is in statute miles
@@ -35,8 +35,8 @@
         LAT=42.39663 # Latitude of the center point of the map. *** SEE BELOW
         LON=-71.17726 # Longitude of the center point of the map. *** SEE BELOW
         HISTTIME=7 # number of days shown in the history section of the website
-#       CALCDIST="" # if this variable is set to "", then planefence.py will use the reported distance from your station instead of recalculating it
-        CALCDIST="--calcdist" # if this variable is set to "--calcdist", then planefence.py will calculate the distance relative to LAT and LON as defined above
+        CALCDIST="" # if this variable is set to "", then planefence.py will use the reported distance from your station instead of recalculating it
+#       CALCDIST="--calcdist" # if this variable is set to "--calcdist", then planefence.py will calculate the distance relative to LAT and LON as defined above
         MY="KX1T's" # text for the header of the website
         MYURL=".." # link for $MY in tge website's header
         PLANETWEET="PlaneBoston" # Twitter handle for PlaneTweet. Comment this out if PlaneTweet is not available or disabled
@@ -82,7 +82,7 @@
 # -----------------------------------------------------------------------------------
 #
 # Let's see if there is a CONF file that overwrites some of the parameters already defined
-# [ -f "$PLANEFENCEDIR/planefence.conf" ] && source "$PLANEFENCEDIR/planefence.conf"
+[[ -f "$PLANEFENCEDIR/planefence.conf" ]] && source "$PLANEFENCEDIR/planefence.conf"
 #
 # Functions
 #
