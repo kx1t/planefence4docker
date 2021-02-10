@@ -587,7 +587,9 @@ PlaneFence $VERSION is part of <a href="https://github.com/kx1t/planefence" targ
 EOF
 
 # Last thing we need to do, is repoint INDEX.HTML to today's file
-ln -sf "$OUTFILEHTML" $OUTFILEDIR/index.html
+pushd "$OUTFILEDIR" > /dev/null
+ln -sf "${OUTFILEHTML##*/}" index.html
+popd > /dev/null
 
 # That's all
 # This could probably have been done more elegantly. If you have changes to contribute, I'll be happy to consider them for addition
