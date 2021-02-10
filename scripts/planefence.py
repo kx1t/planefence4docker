@@ -13,8 +13,8 @@ def main(argv):
 
    inputfile = ''
    outputfile = ''
-   lat = 40
-   lon = -70
+   lat = 42.3966
+   lon = -71.1773
    dist = 2
    verbose = 0
    maxalt = 99999
@@ -25,12 +25,13 @@ def main(argv):
    badcount=0
    calcdist = False
    linkservice = 'adsbx'
+   distunit="mi"
 
    now_utc = datetime.now(timezone('UTC'))
    now = now_utc.astimezone(get_localzone())
 
    try:
-      opts, args = getopt.getopt(argv,'',["h","help","?","distance=","lat=","lon=","dist=","log=","logfile=","v","verbose","outfile=","maxalt=","calcdist","link="])
+      opts, args = getopt.getopt(argv,'',["h","help","?","distance=","lat=","lon=","dist=","log=","logfile=","v","verbose","outfile=","maxalt=","calcdist","link=","distunit=","trackservice="])
    except getopt.GetoptError:
       print 'ERROR. Usage: distance.py [--verbose] --distance=<distance_in_km> --logfile=/path/to/logfile'
       sys.exit(2)
@@ -60,12 +61,16 @@ def main(argv):
 	 calcdist = True
       elif opt == "--link":
 	 linkservice = arg
+      elif opt == "--distunit":
+	 distunit = arg
+      elif opt == "--trackservice":
+         trackservice = arg
 
    if verbose == 1:
       # print 'lat = ', lat
       # print 'lon = ', lon
-      print 'max distance = ', dist, "statute miles"
-      print 'max altitude = ', maxalt, "ft"
+      print 'max distance = ', dist, distunit
+      print 'max altitude = ', maxalt
       # print 'output is written to ', outfile
 
    if logfile == '':
@@ -79,8 +84,23 @@ def main(argv):
       print "ERROR: --link parameter must be adsbx or fa"
       sys.exit(2)
 
+   if distunit != 'km' and distunit != "nm" and distunit != "mi" and distunit != "m":
+      print "ERROR: --distunit must be one of [km|nm|mi|m]"
+      sys.exit(2)
+
    lat1 = math.radians(float(lat))
    lon1 = math.radians(float(lon))
+
+   # determine the distance conversion factor from meters to the desired unit
+   if distunit == "km":
+      distconv = 1.000
+   elif distunit == "nm":
+      distconv = 1.852
+   elif distunit == "mi":
+      distconv = 1.60934
+   elif distunit == "m":
+      distconv = 0.001
+
 
 # now we open the logfile
 # and we parse through each of the lines
@@ -100,7 +120,7 @@ def main(argv):
        # if we can't convert it into a number (e.g., it's text, not a number) then substitute it by some large number
        try:
 	  if calcdist == False:
-          	rowdist=float(row[7]) * 1.15078
+          	rowdist=float(row[7])
 	  else:
 		  # use haversine formula instead of the  distance field
 		  # this enables the use of locations other than the station itself
@@ -111,7 +131,7 @@ def main(argv):
 		  dlat = lat2 - lat1
 		  dlon = lon2 - lon1
 		  a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
-		  rowdist = 7917.5 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+		  rowdist =  12742 * math.atan2(math.sqrt(a), math.sqrt(1 - a)) / distconv
        except:
           rowdist=float("999999")
        try:
@@ -124,11 +144,11 @@ def main(argv):
 	  # first check if we already have a flight number. If we don't, there may be one in the updated record we could use?
           if records[np.where(records == row[0])[0][0]][1] == "" and row[11].strip() != "":
 	     records[np.where(records == row[0])[0][0]][1] = row[11].strip()
-	     #if linkservice == 'fa':
-	     falink = 'https://flightaware.com/live/modes/' + row[0].lower() + '/ident/' + row[11].strip() + '/redirect'
-	     #else:
-	     # format example: https://tar1090.adsbexchange.com/?icao=a07361&lat=42.356&lon=-71.109&zoom=11.0&showTrace=2020-06-05
-	     # falink = 'https://tar1090.adsbexchangecom/?icao='  + row[0].lower() + '&lat=' + lat + '&lon=' + lon + '&zoom=11.0&showTrace=' + row[5][0:4] + '-' + row[5][5:7] + '-' + row[5][8:10]
+	     if trackservice == 'flightaware':
+	        falink = 'https://flightaware.com/live/modes/' + row[0].lower() + '/ident/' + row[11].strip() + '/redirect'
+	     elif trackservice == 'adsbexchange':
+	        # format example: https://globe.adsbexchange.com/?icao=a4a567&lat=42.397&lon=-71.177&zoom=12.0&showTrace=2020-08-12
+                falink = 'https://globe.adsbexchange.com/?icao='  + row[0].lower() + '&lat=' + str(lat) + '&lon=' + str(lon) + '&zoom=12&showTrace=' + row[4][0:4] + '-' + row[4][5:7] + '-' + row[4][8:10]
 
              records[np.where(records == row[0])[0][0]][6] = falink.strip()
 	  # replace "LastHeard" by the time in this row:
@@ -146,11 +166,12 @@ def main(argv):
               print counter, row[0], row[11].strip(), "(", rowdist, "<=", dist, ", alt=", rowalt, "): new"
 	      counter = counter + 1
            # records=np.vstack([records, np.array([row[0],row[11].strip(), row[4] + ' ' + row[5][:8], row[4] + ' ' + row[5][:8],row[1],"{:.1f}".format(rowdist),'https://flightaware.com/live/flight/' + row[11].strip() + '/history' if row[11].strip()<>"" else ''])])
-	   # if linkservice == 'fa':
-	   falink = 'https://flightaware.com/live/modes/' + row[0].lower() + '/ident/' + row[11].strip() + '/redirect'
-	   #else:
-	   # format example: https://tar1090.adsbexchange.com/?icao=a07361&lat=42.356&lon=-71.109&zoom=11.0&showTrace=2020-06-05
-	   # falink = 'https://tar1090.adsbexchangecom/?icao='  + row[0].lower() + '&lat=' + lat + '&lon=' + lon + '&zoom=11.0&showTrace=' + row[5][0:4] + '-' + row[5][5:7] + '-' + row[5][8:10]
+
+           if trackservice == 'flightaware':
+              falink = 'https://flightaware.com/live/modes/' + row[0].lower() + '/ident/' + row[11].strip() + '/redirect'
+           elif trackservice == 'adsbexchange':
+              # format example: https://globe.adsbexchange.com/?icao=a4a567&lat=42.397&lon=-71.177&zoom=12.0&showTrace=2020-08-12
+              falink = 'https://globe.adsbexchange.com/?icao='  + row[0].lower() + '&lat=' + str(lat) + '&lon=' + str(lon) + '&zoom=12&showTrace=' + row[4][0:4] + '-' + row[4][5:7] + '-' + row[4][8:10]
 
            records=np.vstack([records, np.array([row[0],row[11].strip(), row[4] + ' ' + row[5][:8], row[4] + ' ' + row[5][:8],row[1],"{:.1f}".format(rowdist),falink.strip() if row[11].strip()<>"" else ''])])
 	   fltcounter = fltcounter + 1

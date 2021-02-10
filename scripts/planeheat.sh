@@ -1,9 +1,10 @@
 #!/bin/bash
 # PLANEHEAT - a Bash shell script to render a heatmap based on Planefence CSV entries
+# Only to be used in the context of PlaneFence -- the code to create whole websites was removed from this version of the file
 #
 # Usage: ./planeheat.sh [date]
 #
-# Copyright 2020 Ramon F. Kolb - licensed under the terms and conditions
+# Copyright 2020,2021 Ramon F. Kolb - licensed under the terms and conditions
 # of GPLv3. The terms and conditions of this license are included with the Github
 # distribution of this package, and are also available here:
 # https://github.com/kx1t/planefence/
@@ -29,9 +30,6 @@
 # These are the input and output directories and file names:
   PLANEFENCEDIR=/usr/share/planefence # the directory where this file and planefence.py are located
   GRIDSIZE=100
-	STANDALONE="no" # Generates the heatmap as a stand-alone website with the proper headers ("yes") or as an HTML snippet meant to be inserted into another website ("no")
-	# Note: if "no", please make sure that the following elements are in the <head> section of the web page in which it is included:
-	# <link rel="stylesheet" href="leaflet.css" /><script src="leaflet.js"></script>
 
 # -----------------------------------------------------------------------------------
 # Only change the variables below if you know what you are doing.
@@ -41,28 +39,28 @@
         else
                 FENCEDATE=$(date --date=today '+%y%m%d')
         fi
-
+        # Let's see if there is a CONF file that overwrites some of the parameters already defined
+        [[ -f "$PLANEFENCEDIR/planefence.conf" ]] && source "$PLANEFENCEDIR/planefence.conf"
+        #
         INFILECSV=$OUTFILEBASE-$FENCEDATE.csv
-	      TMPLINESBASE=dump1090-ph-temp.tmp
+        TMPLINESBASE=dump1090-ph-temp.tmp
         TMPLINES=$TMPDIR/$TMPLINESBASE
         INFILESOCK=$LOGFILEBASE$FENCEDATE.txt
         TMPVARS=$TMPDIR/planeheat-$FENCEDATE.tmp
-	       TMPVARSTEMPLATE="$TMPDIR/planeheat-*.tmp"
-	        MINTIME=60
-#	VERBOSE="--verbose"
-        VERBOSE=""
+        TMPVARSTEMPLATE="$TMPDIR/planeheat-*.tmp"
+        MINTIME=60
+	VERBOSE="--verbose"
+#        VERBOSE=""
         VERSION=0.2
         LOGFILE=/tmp/planefence.log
 #       LOGFILE=logger # if $LOGFILE is set to "logger", then the logs are written to /var/log/syslog. This is good for debugging purposes.
 #	LOGFILE=/dev/stdout
         CURRENT_PID=$$
         PROCESS_NAME=$(basename "$0")
-	      TIMELOG=$(date +%s)
+        TIMELOG=$(date +%s)
 # -----------------------------------------------------------------------------------
 #
-# Let's see if there is a CONF file that overwrites some of the parameters already defined
-[[ -f "$PLANEFENCEDIR/planefence.conf" ]] && source "$PLANEFENCEDIR/planefence.conf"
-#
+
 # Functions
 #
 # First create an function to write to the log
@@ -96,7 +94,11 @@ LOG ()
 # -----------------------------
 
 # check if the CSV file exists, if not, exit
-[ ! -f "$INFILECSV" ] && ( LOG "\"$INFILECSV\" does not exist"; exit 1 )
+if [ ! -f "$INFILECSV" ]
+then
+	LOG "\"$INFILECSV\" does not exist"
+	exit 1
+fi
 
 #  Define some vars:
 LASTFENCE=0
@@ -174,74 +176,22 @@ LOG "Creating Heatmap Data"
 # Determine the distance in degrees for a square box around the center point
 
 DEGDIST=$(awk 'BEGIN { FS=","; minlat=180; maxlat=-180; minlon=180; maxlon=-180 } { minlat=(minlat<$3)?minlat:$3; maxlat=(maxlat>$3)?maxlat:$3; minlon=(minlon<$4)?minlon:$4; maxlon=(maxlon>$4)?maxlon:$4 } END {dist=(maxlat-minlat)>(maxlon-minlon)?(maxlat-minlat)/2:(maxlon-minlon)/2; print dist}' "$TMPLINES")
-# LOG "Dist=$DEGDIST"
+ LOG "Dist=$DEGDIST"
 
 # determine start time and end time
 read -raREC <<< $(awk 'BEGIN { FS=","; maxtime="00:00:00.000"; mintime="23:59:59.999"} { mintime=(mintime<$6)?mintime:$6; maxtime=(maxtime>$6)?maxtime:$6 } END {print mintime,maxtime}' "$TMPLINES")
-# LOG "Start time=${REC[0]}, End time=${REC[1]}"
+ LOG "Start time=${REC[0]}, End time=${REC[1]}"
 
 # Now call the Heatmap Generator
 $PLANEFENCEDIR/planeheat.pl -lon $LON -lat $LAT -output $OUTFILEDIR -degrees $DEGDIST -maxpositions 200000 -resolution 100 -override -file planeheatdata-$(date -d $FENCEDATE +"%y%m%d").js  -filemask "${TMPLINESBASE::-1}""*"
 
-# LOG "Returned from planeheat.pl"
+ LOG "Returned from planeheat.pl"
 
 DISTMTS=$(bc <<< "$DIST * 1609.34")
 
 # Now build the HTML file of the day:
 
-cat <<EOF >"$OUTFILEHTML"
-<!-- DOCTYPE html>
-<html>
-<!--
-# You are taking an interest in this code! Great!
-# I'm not a professional programmer, and your suggestions and contributions
-# are always welcome. Join me at the GitHub link shown below, or via email
-# at kx1t (at) amsat (dot) org.
-#
-# Copyright 2020,2021 Ramon F. Kolb - licensed under the terms and conditions
-# of GPLv3. The terms and conditions of this license are included with the Github
-# distribution of this package, and are also available here:
-# https://github.com/kx1t/planefence/
-#
-# The package contains parts of, links to, and modifications or derivatives to the following:
-# Dump1090.Socket30003 by Ted Sluis: https://github.com/tedsluis/dump1090.socket30003
-# OpenStreetMap: https://www.openstreetmap.org
-# These packages may incorporate other software and license terms.
-#
-# Summary of License Terms
-# This program is free software: you can redistribute it and/or modify it under the terms of
-# the GNU General Public License as published by the Free Software Foundation, either version 3
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-# without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-# See the GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along with this program.
-# If not, see https://www.gnu.org/licenses/.
--->
-<!-- head>
-    <title>PlaneFence Heatmap</title>
-    <link rel="stylesheet" href="leaflet.css" />
-    <script src="leaflet.js"></script>
-    <!-- style>
-        #map { width: 1024px; height: 768px; }
-        #map { width: 500px; height: 300x; }
-        body { font: 16px/1.4 "Helvetica Neue", Arial, sans-serif; }
-        .ghbtns { position: relative; top: 4px; margin-left: 5px; }
-        a { color: #0077ff; }
-	h1 {text-align: center}
-	.history { flex-grow: 1; border: none; margin: 0; padding: 0; font: 16px/1.4 "Helvetica Neue", Arial, sans-serif; }
-    </style>
-</head>
-<body style="font: 12px/1.4 "Helvetica Neue", Arial, sans-serif;" -->
-
-<div style="font: 12px/1.4 "Helvetica Neue", Arial, sans-serif;">
-	<p>Colors indicate fly-over frequency within the PlaneFence coverage area and timeframe as shown above. They are unrelated to perceived noise levels. A heatmap for the general area is available <a href="../heatmap" target="_blank">here</a>.<br/>
-           Note that the area within 1000 ft around the Rt.60 (Pleasant St) / Rt.2 intersection is under-represented because of the antenna angle.
-        </p>
-</div>
-
+cat <<EOF >"$PLANEHEATHTML"
 <div id="map" style="width: 75vw; height: 40vh"></div>
 
 <script src="HeatLayer.js"></script>
