@@ -15,7 +15,7 @@
 # Feel free to make changes to the variables between these two lines. However, it is
 # STRONGLY RECOMMENDED to RTFM! See README.md for explanation of what these do.
 #
-CSVDIR=/usr/share/dump1090-fa/html/planefence
+CSVDIR=/usr/share/planefence/html
 CSVNAMEBASE=$CSVDIR/planefence-
 CSVNAMEEXT=".csv"
 LOGNAMEBASE=/tmp/noisecapt-
@@ -28,7 +28,7 @@ VERBOSE=1
 # Additional variables:
 CURRENT_PID=$$
 PROCESS_NAME=$(basename $0)
-VERSION=0.1
+VERSION=0.1-docker
 # -----------------------------------------------------------------------------------
 #
 # If you want to read a remote file, please do the following:
@@ -45,7 +45,7 @@ VERSION=0.1
 # Last, configure the REMOTELOG parameter with the username and IP address of the remote account:
 #
 # If you do NOT want remote access, simply comment out the REMOTELOG line below.
-REMOTELOG=pi@10.0.0.161
+# REMOTELOG=pi@10.0.0.161
 
 
 # First create an function to write to the log
