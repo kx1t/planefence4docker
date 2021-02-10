@@ -805,8 +805,8 @@ LOG "Done writing history"
 
 cat <<EOF >>"$OUTFILEHTMTMP"
 <div class="footer">
-<hr/>PlaneFence $VERSION is part of <a href="https://github.com/kx1t/planefence" target="_blank">KX1T's PlaneFence Open Source Project</a>, available on GitHub.
-<br/>&copy; Copyright 2020 by Ram&oacute;n F. Kolb
+<hr/>PlaneFence $VERSION is part of <a href="https://github.com/kx1t/planefence4docker" target="_blank">KX1T's PlaneFence Open Source Project</a>, available on GitHub.
+<br/>&copy; Copyright 2020, 2021 by Ram&oacute;n F. Kolb
 </div>
 </body>
 </html>
