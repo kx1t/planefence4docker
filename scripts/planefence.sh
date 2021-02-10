@@ -818,6 +818,12 @@ mv -f "$OUTFILEHTMTMP" "$OUTFILEHTML"
 ln -sf "${OUTFILEHTML##*/}" index.html
 popd > /dev/null
 
+# VERY last thing... ensure that the log doesn't overflow:
+if [ "$VERBOSE" != "" ] && [ "$LOGFILE" != "" ] && [ "$LOGFILE" != "logger" ]
+then
+        sed -i -e :a -e '$q;N;8000,$D;ba' "$LOGFILE"
+fi
+
 # That's all
 # This could probably have been done more elegantly. If you have changes to contribute, I'll be happy to consider them for addition
 # to the GIT repository! --Ramon
