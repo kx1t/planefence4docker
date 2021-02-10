@@ -51,9 +51,8 @@ CURRENT_PID=$$
 PROCESS_NAME=$(basename $0)
 # need to fix this --> systemctl is-active --quiet noisecapt && NOISECAPT=1 || NOISECAPT=0
 NOISECAPT=0
-# -----------------------------------------------------------------------------------
 #
-
+# -----------------------------------------------------------------------------------
 # Read the parameters from the config file
 if [ -f "$PLANEFENCEDIR/planefence.conf" ]
 then
@@ -62,6 +61,7 @@ else
 	echo $PLANEFENCEDIR/planefence.conf is missing. We need it to run PlaneFence!
 	exit 2
 fi
+
 # first get DISTANCE unit:
 DISTUNIT="mi"
 DISTCONV=1
@@ -611,7 +611,7 @@ fi
 # Next, we are going to print today's HTML file:
 # Note - all text between 'cat' and 'EOF' is HTML code:
 
-cat <<EOF >"$OUTFILEHTML"
+cat <<EOF >"$OUTFILEHTMTMP"
 <!DOCTYPE html>
 <html>
 <!--
@@ -658,13 +658,13 @@ EOF
 
 if [ -f "$PLANEHEATHTML" ]
 then
-     cat <<EOF >>"$OUTFILEHTML"
+     cat <<EOF >>"$OUTFILEHTMTMP"
      <link rel="stylesheet" href="leaflet.css" />
      <script src="leaflet.js"></script>
 EOF
 fi
 
-cat <<EOF >>"$OUTFILEHTML"
+cat <<EOF >>"$OUTFILEHTMTMP"
     <style>
         body { font: 12px/1.4 "Helvetica Neue", Arial, sans-serif; }
         a { color: #0077ff; }

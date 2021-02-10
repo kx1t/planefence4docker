@@ -35,7 +35,7 @@ then
 else
 	[[ "x$PF_LOG" == "x" ]] && LOGFILE="/tmp/planefence.log" || LOGFILE="$PF_LOG"
 fi
-echo pflog=$PF_LOG and logfile=$LOGFILE
+# echo pflog=$PF_LOG and logfile=$LOGFILE
 sed -i 's|\(^\s*LOGFILE=\).*|\1'"$LOGFILE"'|' /usr/share/planefence/planefence.conf
 #
 # -----------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ sed -i 's/\(^\s*LON=\).*/\1'"$FEEDER_LONG"'/' /usr/share/planefence/planeheat.sh
 #
 #--------------------------------------------------------------------------------
 # Now loop forever, after waiting for 1 cycle. The wait is so socket30003 can actually collect some data before we try to call PlaneFence
-echo "[$APPNAME][$(date)] PlaneFence is starting in $LOOPTIME..."
+echo "[$APPNAME][$(date)] PlaneFence is deployed and will be starting in $LOOPTIME..."
 sleep $LOOPTIME
 echo "[$APPNAME][$(date)] PlaneFence starting its initial run now"
 while true
