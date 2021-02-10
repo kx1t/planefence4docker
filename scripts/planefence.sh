@@ -814,6 +814,7 @@ EOF
 
 # Last thing we need to do, is repoint INDEX.HTML to today's file
 pushd "$OUTFILEDIR" > /dev/null
+mv -f "$OUTFILEHTMTMP" "$OUTFILEHTML"
 ln -sf "${OUTFILEHTML##*/}" index.html
 popd > /dev/null
 

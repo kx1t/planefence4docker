@@ -145,7 +145,7 @@ def main(argv):
 	   if verbose == 1:
               print counter, row[0], row[11].strip(), "(", rowdist, "<=", dist, ", alt=", rowalt, "): new"
 	      counter = counter + 1
-           # records=np.vstack([records, np.array([row[0],row[11].strip(), row[4] + ' ' + row[5][:8], row[4] + ' ' + row[5][:8],row[1],"{:.1f}".format(rowdist),'https://flightaware.com/live/flight/' + row[11].strip() + '/history' if row[11].strip()<>"" else ''])])    
+           # records=np.vstack([records, np.array([row[0],row[11].strip(), row[4] + ' ' + row[5][:8], row[4] + ' ' + row[5][:8],row[1],"{:.1f}".format(rowdist),'https://flightaware.com/live/flight/' + row[11].strip() + '/history' if row[11].strip()<>"" else ''])])
 	   # if linkservice == 'fa':
 	   falink = 'https://flightaware.com/live/modes/' + row[0].lower() + '/ident/' + row[11].strip() + '/redirect'
 	   #else:

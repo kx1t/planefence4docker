@@ -27,28 +27,11 @@
 # Feel free to make changes to the variables between these two lines. However, it is
 # STRONGLY RECOMMENDED to RTFM! See README.md for explanation of what these do.
 # These are the input and output directories and file names:
-        OUTFILEDIR=/usr/share/planefence/html # the web directory you want PlaneFence to write to
-        PLANEFENCEDIR=/usr/share/planefence # the directory where this file and planefence.py are located
-        MAXALT=5000 # only planes below this altitude are reported. Must correspond to your socket30003 altitude unit
-        DIST=2 # only planes closer than this distance are reported. If CALCDIST (below) is set to "--calcdist", then the distance is in statute miles
-#                  if CALCDIST="", then the unit is whatever you used in your socket30003 setup
-        LAT=42.39663 # Latitude of the center point of the map. *** SEE BELOW
-        LON=-71.17726 # Longitude of the center point of the map. *** SEE BELOW
-        HISTTIME=7 # number of days shown in the history section of the website
-        CALCDIST="" # if this variable is set to "", then planefence.py will use the reported distance from your station instead of recalculating it
-#       CALCDIST="--calcdist" # if this variable is set to "--calcdist", then planefence.py will calculate the distance relative to LAT and LON as defined above
-        MY="KX1T's" # text for the header of the website
-        MYURL=".." # link for $MY in tge website's header
-        PLANETWEET="PlaneBoston" # Twitter handle for PlaneTweet. Comment this out if PlaneTweet is not available or disabled
-        RED="LightCoral" # background cell color for Loudness
-        YELLOW="Gold" # background cell color for Loudness
-        GREEN="YellowGreen" # background cell color for Loudness
-        GREENLIMIT=9 # Max. Loudness level to be shown green
-        YELLOWLIMIT=16 # Max. Loudness level to be shown yelloe
-        GRIDSIZE=100
+  PLANEFENCEDIR=/usr/share/planefence # the directory where this file and planefence.py are located
+  GRIDSIZE=100
 	STANDALONE="no" # Generates the heatmap as a stand-alone website with the proper headers ("yes") or as an HTML snippet meant to be inserted into another website ("no")
-			# Note: if "no", please make sure that the following elements are in the <head> section of the web page in which it is included:
-			# <link rel="stylesheet" href="leaflet.css" /><script src="leaflet.js"></script>
+	# Note: if "no", please make sure that the following elements are in the <head> section of the web page in which it is included:
+	# <link rel="stylesheet" href="leaflet.css" /><script src="leaflet.js"></script>
 
 # -----------------------------------------------------------------------------------
 # Only change the variables below if you know what you are doing.
@@ -59,17 +42,13 @@
                 FENCEDATE=$(date --date=today '+%y%m%d')
         fi
 
-        TMPDIR=/tmp
-        LOGFILEBASE=/run/socket30003/dump1090-127_0_0_1-
-        OUTFILEBASE=$OUTFILEDIR/planefence-
-        OUTFILEHTML=$OUTFILEBASE$FENCEDATE-heatmap.html
-        INFILECSV=$OUTFILEBASE$FENCEDATE.csv
-	TMPLINESBASE=dump1090-ph-temp.tmp
+        INFILECSV=$OUTFILEBASE-$FENCEDATE.csv
+	      TMPLINESBASE=dump1090-ph-temp.tmp
         TMPLINES=$TMPDIR/$TMPLINESBASE
         INFILESOCK=$LOGFILEBASE$FENCEDATE.txt
         TMPVARS=$TMPDIR/planeheat-$FENCEDATE.tmp
-	TMPVARSTEMPLATE="$TMPDIR/planeheat-*.tmp"
-	MINTIME=60
+	       TMPVARSTEMPLATE="$TMPDIR/planeheat-*.tmp"
+	        MINTIME=60
 #	VERBOSE="--verbose"
         VERBOSE=""
         VERSION=0.2
@@ -78,7 +57,7 @@
 #	LOGFILE=/dev/stdout
         CURRENT_PID=$$
         PROCESS_NAME=$(basename "$0")
-	TIMELOG=$(date +%s)
+	      TIMELOG=$(date +%s)
 # -----------------------------------------------------------------------------------
 #
 # Let's see if there is a CONF file that overwrites some of the parameters already defined
@@ -219,7 +198,7 @@ cat <<EOF >"$OUTFILEHTML"
 # are always welcome. Join me at the GitHub link shown below, or via email
 # at kx1t (at) amsat (dot) org.
 #
-# Copyright 2020 Ramon F. Kolb - licensed under the terms and conditions
+# Copyright 2020,2021 Ramon F. Kolb - licensed under the terms and conditions
 # of GPLv3. The terms and conditions of this license are included with the Github
 # distribution of this package, and are also available here:
 # https://github.com/kx1t/planefence/
