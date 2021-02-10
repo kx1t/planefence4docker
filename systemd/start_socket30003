@@ -3,7 +3,7 @@
 
 APPNAME="socket30003"
 
-echo "[$APPNAME] Socket30003 deployment started"
+echo "[$APPNAME][$(date)] Socket30003 deployment started"
 
 # -----------------------------------------------------------------------------------
 # Copyright 2020, 2021 Ramon F. Kolb - licensed under the terms and conditions
@@ -48,11 +48,11 @@ fi
 
 #--------------------------------------------------------------------------------
 # Now start dump1090.socket30003 in a loop that restarts it $LOOPTIME seconds after it exits or crashes:
-echo "[$APPNAME] socket30003 starting its initial run now"
+echo "[$APPNAME][$(date)] socket30003 starting its initial run now"
 while true
 do
-  /usr/share/socket30003/socket30003.pl
-	echo "[$APPNAME] socket30003 has exited... restarting in $LOOPTIME"
+  echo "[$APPNAME][$(date)] $(/usr/share/socket30003/socket30003.pl)"
+	echo "[$APPNAME][$(date)] socket30003 has exited... restarting in $LOOPTIME"
 	sleep $LOOPTIME
-	echo "[$APPNAME] socket30003 restarting now"
+	echo "[$APPNAME][$(date)] socket30003 restarting now"
 done
