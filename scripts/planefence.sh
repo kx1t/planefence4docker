@@ -47,7 +47,8 @@ fi
 
 CURRENT_PID=$$
 PROCESS_NAME=$(basename $0)
-systemctl is-active --quiet noisecapt && NOISECAPT=1 || NOISECAPT=0
+# need to fix this --> systemctl is-active --quiet noisecapt && NOISECAPT=1 || NOISECAPT=0
+NOISECAPT=0
 # -----------------------------------------------------------------------------------
 #
 

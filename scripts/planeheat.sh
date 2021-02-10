@@ -60,7 +60,7 @@
         fi
 
         TMPDIR=/tmp
-        LOGFILEBASE=$TMPDIR/dump1090-127_0_0_1-
+        LOGFILEBASE=/run/socket30003/dump1090-127_0_0_1-
         OUTFILEBASE=$OUTFILEDIR/planefence-
         OUTFILEHTML=$OUTFILEBASE$FENCEDATE-heatmap.html
         INFILECSV=$OUTFILEBASE$FENCEDATE.csv
@@ -157,7 +157,7 @@ do
         IFS="," read -r -aRECORD <<< "$(echo -n $CSVLINE | tr -d '[:cntrl:]')"
 	(( COUNTER++ ))
 	LOG "Processing ${RECORD[0]} (${RECORD[2]:11:8} - ${RECORD[3]:11:8}) with COUNTER=$COUNTER, NUMRECORD=${#RECORD[@]}, LASTFENCE=$LASTFENCE"
-	
+
 	# changed the IF statement below. Skipping over already processed entities doesn't really slow down the script too much
 	# if it is executed every, say hour or so, and this will enable collecting more data if the log rolled over just when we did the
 	# last iteration.
