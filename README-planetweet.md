@@ -1,46 +1,13 @@
 # Send a Tweet for each new plane in PlaneFence
 This utility enables tweeting of new events. It consists of a BASH shell script that monitors today's planes as written by PlaneFence, and sends out a tweet for every new plane using [Twurl](https://github.com/twitter/twurl).
 
-There are three major parts to install this. Each of these parts is described below.
-- Twurl is dependent on Ruby version 2.5 or greater, which is a later version than comes standard for the Raspberry Pi.
+There are two major parts to install this. Each of these parts is described below.
+
 - You must apply for your own Twitter Developer Account and create an app.
-- You must configure the BASH shell script to send the tweets
+- You must follow the instructions below to 
 
 ## Prerequisites
-These instructions assume that you already installed [PlaneFence](https://github.com/kx1t/planefence). If you haven't, click on the link and do that first.
-You also should have `git` installed, but you already did this when you installed PlaneFence.
-
-## Installing Ruby 2.6 and Twurl
-
-### Ruby 2.6 installation
-We will use [Tom Black](https://gist.github.com/blacktm)'s excellent installation script for Ruby 2.6.
-On your Raspberry Pi's command line, type the following. Please note that this may take a LONG time to install, compile, etc.
-Be patient and get a cup of coffee or tea :). Oh - in case you aren't familiar with Linux compiling - there's a lot of text scrolling over
-your screen. Ignore everything including warnings. 
-```
-bash <(curl -s https://gist.githubusercontent.com/blacktm/8302741/raw/install_ruby_rpi.sh)
-```  
-If successful, something like this will be shown:
-```
-  Installed ruby-2.6.4 to /home/pi/.rbenv/versions/2.6.4
-  Reload the current shell to get access to rbenv using:
-    source ~/.bashrc
-  Finished in 0 hr, 20 min, and 30 sec
-```
-Now execute `.bashrc`:
-```
-source ~/.bashrc
-```
-### Twurl installation
-On your command line, type:
-```
-gem install twurl
-```
-If successful, something like this is shown:
-```
-Successfully installed twurl-0.9.5
-1 gem installed
-```
+This is part of the [kx1t/docker-planefence] docker container. Nothing in this document will make sense outside the context of this container.
 
 ## Signing up for a Twitter Development Account and getting Twitter Credentials
 
@@ -48,7 +15,9 @@ You'll need a registered Twitter application. If you've never registered a Twitt
 
 - If you need help, [here's a webpage](https://elfsight.com/blog/2020/03/how-to-get-twitter-api-key/) with an excellent graphical walk-through of what you need to do. In short, this is the same as doing the following:
 
-- Sign-in using your Twitter account and then fill out the short form at https://apps.twitter.com/app/new.
+- Go to https://developer.twitter.com/en/apps and sign in to your Twitter account. Click "Create an app".
+<img src="https://raw.githubusercontent.com/kx1t/planefence4docker/master/.img/create_an_app.png" width=100>
+
   - If you've previously registered a Twitter application, it should be listed at https://apps.twitter.com/.
   - Once you've registered an application, make sure to set your application's Access Level to "Read, Write and Access direct messages", otherwise you'll receive an error that looks like this: `Error processing your OAuth request: Read-only application cannot POST`
 
