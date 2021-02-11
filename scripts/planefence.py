@@ -33,11 +33,11 @@ def main(argv):
    try:
       opts, args = getopt.getopt(argv,'',["h","help","?","distance=","lat=","lon=","dist=","log=","logfile=","v","verbose","outfile=","maxalt=","calcdist","link=","distunit=","trackservice="])
    except getopt.GetoptError:
-      print 'ERROR. Usage: distance.py [--verbose] --distance=<distance_in_km> --logfile=/path/to/logfile'
+      print 'Usage: planefence.py [--verbose] [--calcdist] --distance=<distance_in_statute_miles> --logfile=/path/to/logfile [--outfile=/path/to/outputfile] [--maxalt=maximum_altitude_in_ft] [--format=csv|html|both] [--trackservice=adsbexchange|flightaware]'
       sys.exit(2)
    for opt, arg in opts:
       if opt in ("-h", "-?", "--help", "--?") :
-         print 'Usage: distance.py [--verbose] [--calcdist] --distance=<distance_in_statute_miles> --logfile=/path/to/logfile [--outfile=/path/to/outputfile] [--maxalt=maximum_altitude_in_ft] [--format=csv|html|both]'
+         print 'Usage: planefence.py [--verbose] [--calcdist] --distance=<distance_in_statute_miles> --logfile=/path/to/logfile [--outfile=/path/to/outputfile] [--maxalt=maximum_altitude_in_ft] [--format=csv|html|both] [--trackservice=adsbexchange|flightaware]'
          print 'If lat/long is omitted, then Belmont, MA (town hall) is used.'
 	 print 'If distance is omitted, then 2 miles is used.'
 	 print 'If outfile is omitted, then output is written to stdout. Note - if you intend to capture stdout for processing, make sure that --verbose=1 is not used.'
