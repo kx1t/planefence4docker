@@ -135,7 +135,7 @@ then
 
 			# And now, let's tweet!
       if [ "$TWEETON" == "yes" ]; then
-                                # $TWURLPATH/twurl -q -r "status=$TWEET" /1.1/statuses/update.json
+
 				# send a tweet and read the link to the tweet into ${LINK[1]}
 #        LINK=$(echo `$TWURLPATH/twurl -r "status=$TWEET" /1.1/statuses/update.json` | tee -a /tmp/tweets.log | jq '.entities."urls" | .[] | .url' | tr -d '\"')
 				LINK=$(echo `twurl -r "status=$TWEET" /1.1/statuses/update.json` | tee -a /tmp/tweets.log | jq '.entities."urls" | .[] | .url' | tr -d '\"')
