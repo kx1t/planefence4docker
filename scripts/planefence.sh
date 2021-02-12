@@ -564,7 +564,7 @@ then
 	LOG "Invoking PlaneTweet!"
 	$PLANEFENCEDIR/planetweet.sh today "$DISTUNIT" "$ALTUNIT"
 else
-	[ "$1" == "" ] && LOG "Info: PlaneTweet not called because we're doing a manual full run" || LOG "Info: PlaneTweet not enabled"
+	[ "$1" != "" ] && LOG "Info: PlaneTweet not called because we're doing a manual full run" || LOG "Info: PlaneTweet not enabled"
 fi
 
 # And see if we need to run PLANEHEAT
