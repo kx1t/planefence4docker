@@ -61,7 +61,7 @@ echo If you recreate the container and lose the file somehow, you can always res
 echo \"docker cp .twurlrc planefence:/root/.twurlrc\"
 echo
 read -p "Do you want tweeting to be enabled for this session [Y/n]?" -r question
-if [[ "$(tr '[:upper:]' '[:lower:]' <<< ${QUESTION:0:1}") == "y"]]
+if [[ "$(tr '[:upper:]' '[:lower:]' <<< ${QUESTION:0:1})" == "y"]]
 then
   sed -i 's|\(^\s*PLANETWEET=\).*|\1'"$(sed -n '/profiles:/{n;p;}' /root/.twurlrc | tr -d '[:blank:][=:=]')"'|' /usr/share/planefence/planefence.conf
   echo "Tweeting is enabled for this session only. If you want to make it permanent after reboot or rebuild of the container,"
