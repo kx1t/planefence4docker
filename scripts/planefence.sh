@@ -348,7 +348,7 @@ EOF
 				printf "<td><A href=\"%s\" target=\"_new\">Spectrogram</a></td>\n" "$SPECTROFILE" >>"$2"
 				LOG "SpectroFile exists, added link to table"
 			else
-				LOG "SpectroFile doesnt exist, no link added to table"
+				#LOG "SpectroFile doesnt exist, no link added to table"
 			fi
 
 			printf "</tr>\n" >>"$2"
