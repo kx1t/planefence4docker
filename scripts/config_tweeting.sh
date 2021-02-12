@@ -28,8 +28,11 @@ echo link: https://elfsight.com/blog/2020/03/how-to-get-twitter-api-key/
 echo
 if [[ -f ~/.twurlrc ]]
 then
-  echo Warning: it appears that Tweeting already has been configured for Twitter handle $(sed -n '/profiles:/{n;p;}' /root/.twurlrc | tr -d '[:blank:][=:=]').
+  echo -----------------------------------------------------------------------------------
+  echo !!! WARNING !!!
+  echo It appears that Tweeting already has been configured for Twitter handle $(sed -n '/profiles:/{n;p;}' /root/.twurlrc | tr -d '[:blank:][=:=]').
   echo If you do not want to overwrite this configuration, press CTRL-C now.
+  echo -----------------------------------------------------------------------------------
   echo
   echo If you overwrite it and you want to return to the previous configuration, you can do so by entering:
   echo \"docker exec -t planefence mv -f ~/.twurlrc.backup ~/.twurlrc\"
