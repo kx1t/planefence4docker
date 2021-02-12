@@ -433,6 +433,8 @@ LOG("Number of sorted heatmap positions: ".(keys %sort),"I");
 # Get the highest :
 my ($highest_weight,@rubbish)= reverse sort keys %sort;
 $highest_weight =~ s/,.+,.+$//;
+$highest_weight += 0;
+
 # Get lowest weight:
 my $counter = 0;
 my $lowest_weight = 0;
