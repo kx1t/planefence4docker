@@ -60,8 +60,13 @@ sed -i 's/\(^\s*LON=\).*/\1'"$FEEDER_LONG"'/' /usr/share/planefence/planeheat.sh
 [[ "x$PF_MAXDIST" != "x" ]] && sed -i 's/\(^\s*DIST=\).*/\1'"$PF_MAXDIST"'/' /usr/share/planefence/planeheat.sh
 # -----------------------------------------------------------------------------------
 #
+# Move the jscript files from the staging directory into the html directory.
+# this cannot be done at build time because the directory is exposed and it is
+# overwritten by the host at start of runtime
+cp -f /usr/share/planefence/stage/* /usr/share/planefence/html
 #--------------------------------------------------------------------------------
 # Now loop forever, after waiting for 1 cycle. The wait is so socket30003 can actually collect some data before we try to call PlaneFence
+#
 echo "[$APPNAME][$(date)] PlaneFence is deployed and will be starting in $LOOPTIME..."
 sleep $LOOPTIME
 echo "[$APPNAME][$(date)] PlaneFence starting its initial run now"
