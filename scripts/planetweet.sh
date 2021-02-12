@@ -22,7 +22,11 @@
 # -----------------------------------------------------------------------------------
 # Feel free to make changes to the variables between these two lines. However, it is
 # STRONGLY RECOMMENDED to RTFM! See README.md for explanation of what these do.
-
+#
+# Let's see if there is a CONF file that overwrites some of the parameters already defined
+[[ "x$PLANEFENCEDIR" == "x" ]] && PLANEFENCEDIR=/usr/share/planefence
+[[ -f "$PLANEFENCEDIR/planefence.conf" ]] && source "$PLANEFENCEDIR/planefence.conf"
+#
 # These are the input and output directories and file names
 # HEADR determines the tags for each of the fields in the Tweet:
         HEADR=("Transponder ID" "Flight" "Time in range" "Time out of range" "Min. Alt. (ft)" "Min. Dist. (miles)" "Link" "Loudness" "Peak Audio Level")
@@ -32,7 +36,7 @@
         YSTRDAYCSV=$(date -d yesterday +"planefence-%y%m%d.csv")
 # TWURLPATH is where we can find TWURL. This only needs to be filled in if you can't get it
 # as part of the default PATH:
-        [ ! `which twurl` ] && TWURLPATH="/home/pi/.rbenv/shims/"
+        [ ! `which twurl` ] && TWURLPATH="/root/.rbenv/shims/"
 # SLEEPTIME determine how long (in seconds) we wait after checking and (potentially) tweeting
 # before we check again:
         SLEEPTIME=60
@@ -42,7 +46,7 @@
         LOGFILE=/tmp/planetweet.log
         TMPFILE=/tmp/planetweet.tmp
         TWEETON=yes
-	CSVDIR=/usr/share/dump1090-fa/html/planefence
+	CSVDIR=$OUTFILEDIR
 	CSVNAMEBASE=$CSVDIR/planefence-
 	CSVNAMEEXT=".csv"
 	VERBOSE=1
@@ -55,7 +59,7 @@
 # Additional variables:
 	CURRENT_PID=$$
 	PROCESS_NAME=$(basename $0)
-	VERSION=2.0rc2
+	VERSION=3.0_docker-planefence
 # -----------------------------------------------------------------------------------
 #
 # First create an function to write to the log
