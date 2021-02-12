@@ -18,9 +18,11 @@ echo "[$APPNAME][$(date)] Running config_tweeting"
 # -----------------------------------------------------------------------------------
 
 echo Configure Tweeting for PlaneFence
+echo
 echo Prerequisite -- you should already have signed up for an Developer Account
 echo with Twitter, and created an application with Read/Write/Direct message
 echo permissions.
+echo
 echo "If you haven't done this, or don't know how to do this, please browse to this"
 echo link: https://elfsight.com/blog/2020/03/how-to-get-twitter-api-key/
 echo
@@ -28,6 +30,7 @@ if [[ -f ~/.twurlrc ]]
 then
   echo Warning: it appears that Tweeting already has been configured for Twitter handle $(sed -n '/profiles:/{n;p;}' /root/.twurlrc | tr -d '[:blank:][=:=]').
   echo If you do not want to overwrite this configuration, press CTRL-C now.
+  echo
   echo If you overwrite it and you want to return to the previous configuration, you can do so by entering:
   echo \"docker exec -t planefence mv -f ~/.twurlrc.backup ~/.twurlrc\"
   echo
@@ -36,16 +39,19 @@ echo In order to configure Twitter correctly, you will need 2 keys from your
 echo Twitter Dev Account, as they pertain to the application you created:
 echo - Consumer API Key
 echo - Consumer API Key Secret
+echo
 echo Paste them here:
 read -p "Enter Consumer API Key: " -r KEY
-read -p "Enter Consumer API Secret" -r SECRET
+read -p "Enter Consumer API Secret: " -r SECRET
 [[ "$(wc -c <<< $KEY)" != "26" ]] && echo "Warning - your Consumer API Key should probably be 25 characters. Please check!"
 [[ "$(wc -c <<< $SECRET)" != "51" ]] && echo "Warning - your Consumer API Key Secret should probably be 50 characters. Please check!"
-echo Press ENTER to continue the configuration or CTRL-C to abort. Any existing configuration will be backed up.
 echo
 echo MAKE SURE TO SAVE A COPY OF THESE KEYS SOMEWHERE. YOU MAY NEED THEM AGAIN IN THE FUTURE!
+echo
 echo If incidentally overwrite your old config and you want to return to the previous configuration, you can do so by entering:
 echo \"docker exec -t planefence mv -f ~/.twurlrc.backup ~/.twurlrc\"
+echo
+echo Press ENTER to continue the configuration or CTRL-C to abort. Any existing configuration will be backed up.
 read
 [[ -f ~/.twurlrc ]] && mv -f ~/.twurlrc ~/.twurlrc.backup
 echo
@@ -61,7 +67,7 @@ echo If you recreate the container and lose the file somehow, you can always res
 echo \"docker cp .twurlrc planefence:/root/.twurlrc\"
 echo
 read -p "Do you want tweeting to be enabled for this session [Y/n]?" -r question
-if [[ "$(tr '[:upper:]' '[:lower:]' <<< ${QUESTION:0:1})" == "y"]]
+if [[ "$(tr '[:upper:]' '[:lower:]' <<< ${QUESTION:0:1})" == "y" ]] || [[ "$QUESTION" == "" ]]
 then
   sed -i 's|\(^\s*PLANETWEET=\).*|\1'"$(sed -n '/profiles:/{n;p;}' /root/.twurlrc | tr -d '[:blank:][=:=]')"'|' /usr/share/planefence/planefence.conf
   echo "Tweeting is enabled for this session only. If you want to make it permanent after reboot or rebuild of the container,"
