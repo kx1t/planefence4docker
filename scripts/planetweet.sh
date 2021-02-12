@@ -46,7 +46,7 @@
         LOGFILE=/tmp/planetweet.log
         TMPFILE=/tmp/planetweet.tmp
         TWEETON=yes
-        ATTRIB="%0A(C) 2021 Ramon F. Kolb - docker:kx1t/planefence%0A"
+
 	      CSVDIR=$OUTFILEDIR
 	      CSVNAMEBASE=$CSVDIR/planefence-
 	      CSVNAMEEXT=".csv"
@@ -55,6 +55,8 @@
 # MINTIME is the minimum time we wait before sending a tweet
 # to ensure that at least $MINTIME of audio collection (actually limited to the Planefence update runs in this period) to get a more accurste Loudness.
 	      MINTIME=200
+
+        [[ "x$PF_TWATTRIB" != "x" ]] && ATTRIB="%0A$PF_TWATTRIB%0A" || ATTRIB="%0A(C) 2021 Ramon F. Kolb - docker:kx1t/planefence%0A"
 # -----------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------
 # Additional variables:
