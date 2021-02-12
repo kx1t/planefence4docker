@@ -46,6 +46,7 @@ sed -i 's|\(^\s*LOGFILE=\).*|\1'"$LOGFILE"'|' /usr/share/planefence/planefence.c
 [[ "x$PF_MAXALT" != "x" ]] && sed -i 's/\(^\s*MAXALT=\).*/\1'"$PF_MAXALT"'/' /usr/share/planefence/planefence.conf
 [[ "x$PF_MAXDIST" != "x" ]] && sed -i 's/\(^\s*DIST=\).*/\1'"$PF_MAXDIST"'/' /usr/share/planefence/planefence.conf
 [[ "x$PF_NAME" != "x" ]] && sed -i 's/\(^\s*MY=\).*/\1'"$PF_NAME"'/' /usr/share/planefence/planefence.conf
+[[ "x$PF_TRACKSVC" != "x" ]] && sed -i 's|\(^\s*TRACKSERVICE=\).*|\1'"$PF_TRACKSVC"'|' /usr/share/planefence/planefence.conf
 [[ "x$PF_MAPURL" != "x" ]] && sed -i 's|\(^\s*MYURL=\).*|\1'"$PF_MAPURL"'|' /usr/share/planefence/planefence.conf
 [[ "x$PF_TWEET" != "x" ]] && sed -i 's/\(^\s*PLANETWEET=\).*/\1'"$PF_TWEET"'/' /usr/share/planefence/planefence.conf
 [[ "x$PF_SOCK30003HOST" != "x" ]] && sed -i 's/127_0_0_1/'"$PF_SOCK30003HOST"'/' /usr/share/planefence/planefence.conf
