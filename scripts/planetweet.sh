@@ -46,14 +46,15 @@
         LOGFILE=/tmp/planetweet.log
         TMPFILE=/tmp/planetweet.tmp
         TWEETON=yes
-	CSVDIR=$OUTFILEDIR
-	CSVNAMEBASE=$CSVDIR/planefence-
-	CSVNAMEEXT=".csv"
-	VERBOSE=1
-	CSVTMP=/tmp/planetweet2-tmp.csv
+        ATTRIB="%0A(C) 2021 Ramon F. Kolb - docker:kx1t/planefence%0A"
+	      CSVDIR=$OUTFILEDIR
+	      CSVNAMEBASE=$CSVDIR/planefence-
+	      CSVNAMEEXT=".csv"
+	      VERBOSE=1
+	      CSVTMP=/tmp/planetweet2-tmp.csv
 # MINTIME is the minimum time we wait before sending a tweet
 # to ensure that at least $MINTIME of audio collection (actually limited to the Planefence update runs in this period) to get a more accurste Loudness.
-	MINTIME=200
+	      MINTIME=200
 # -----------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------
 # Additional variables:
@@ -110,37 +111,44 @@ then
                         TWEET="${HEADR[0]}: ${RECORD[0]}%0A"
                         for i in {1..5}
                         do
-                                TWEET="$TWEET${HEADR[i]}: ${RECORD[i]}%0A"
+                                TWEET+="${HEADR[i]}: ${RECORD[i]}%0A"
                         done
 
                         # If there is sound level data, then add a Loudness factor (peak RMS - 1 hr avg) to the tweet.
                         # There is more data we could tweet, but we're a bit restricted in real estate on twitter.
-                        (( RECORD[7] < 0 )) && TWEET="$TWEET${HEADR[8]}: ${RECORD[7]} dBFS%0A${HEADR[7]}: $(( RECORD[7] - RECORD[11] )) dB%0A"
+                        (( RECORD[7] < 0 )) && TWEET+="${HEADR[8]}: ${RECORD[7]} dBFS%0A${HEADR[7]}: $(( RECORD[7] - RECORD[11] )) dB%0A"
 
                         # Now add the last field without title or training Newline
                         # Reason: this is a URL that Twitter reinterprets and previews on the web
                         # Also, the Newline at the end tends to mess with Twurl
 
-                        TWEET="$TWEET${RECORD[6]}"
+                        TWEET+="${RECORD[6]}%0A"
+
 			LOG "Assessing ${RECORD[0]}: ${RECORD[1]:0:1}; diff=$TIMEDIFF secs; Tweeting... msg body: $TWEET" 1
 
 			# Before anything else, let's add the "tweeted" flag to the flight number:
 			XX="@${RECORD[1]}"
 			RECORD[1]=$XX
 
+      # Add attribution to the tweet:
+       TWEET+="$ATTRIB"
+
 			# And now, let's tweet!
-                        if [ "$TWEETON" == "yes" ]; then
+      if [ "$TWEETON" == "yes" ]; then
                                 # $TWURLPATH/twurl -q -r "status=$TWEET" /1.1/statuses/update.json
 				# send a tweet and read the link to the tweet into ${LINK[1]}
-				LINK=$(echo `$TWURLPATH/twurl -r "status=$TWEET" /1.1/statuses/update.json` | tee -a /tmp/tweets.log | jq '.entities."urls" | .[] | .url' | tr -d '\"')
+#        LINK=$(echo `$TWURLPATH/twurl -r "status=$TWEET" /1.1/statuses/update.json` | tee -a /tmp/tweets.log | jq '.entities."urls" | .[] | .url' | tr -d '\"')
+				LINK=$(echo `twurl -r "status=$TWEET" /1.1/statuses/update.json` | tee -a /tmp/tweets.log | jq '.entities."urls" | .[] | .url' | tr -d '\"')
+        LOG "LINK=$LINK"
+        echo "TWEET TEXT=$TWEET"
 			else
 				LOG "(A tweet would have been sent but \$TWEETON=\"$TWEETON\")"
-                        fi
+      fi
 
 			# Add a reference to the tweet to RECORD[7] (if no audio is available) or RECORD[11] (if audio is available)
 			(( RECORD[7] < 0 )) && RECORD[12]="$LINK" || RECORD[7]="$LINK"
                         # LOG "Tweet sent!"
-			LOG "TWIRL results: $LINK"
+			LOG "TWURL results: $LINK"
 
 		else
 			LOG "Assessing ${RECORD[0]}: ${RECORD[1]:0:1}; diff=$TIMEDIFF secs; Skipping: either already tweeted, or within $MINTIME secs."
