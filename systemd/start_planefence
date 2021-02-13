@@ -95,6 +95,15 @@ fi
 [[ "x$PF_MAPWIDTH" != "x" ]] && sed -i 's|\(^\s*HEATMAPWIDTH=\).*|\1'"$PF_MAPWIDTH"'|' /usr/share/planefence/planefence.conf
 [[ "x$PF_MAPZOOM" != "x" ]] && sed -i 's|\(^\s*HEATMAPZOOM=\).*|\1'"$PF_MAPZOOM"'|' /usr/share/planefence/planefence.conf
 #
+# Also do this for files in the past -- /usr/share/planefence/html/planefence-??????.html
+for i in /usr/share/planefence/html/planefence-??????.html
+do
+	[[ "x$PF_MAPWIDTH" != "x" ]] && sed  -i 's|\(^\s*<div id=\"map\" style=\"width:.*;\)|<div id=\"map\" style=\"width:'"$PF_MAPWIDTH"';|' $i
+	[[ "x$PF_MAPHEIGHT" != "x" ]] && sed -i 's|\(; height:[^\"]*\)|; height: '"$PF_MAPHEIGHT"'\"|' $i
+	[[ "x$PF_MAPZOOM" != "x" ]] && sed -i 's|\(^\s*var map =.*], \)\(.*\)|\1'"$PF_MAPZOOM"');|' $i
+done
+
+#
 # -----------------------------------------------------------------------------------
 #
 # Move the jscript files from the staging directory into the html directory.
