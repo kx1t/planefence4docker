@@ -146,11 +146,10 @@ def main(argv):
 	     records[np.where(records == row[0])[0][0]][1] = row[11].strip()
 	     if trackservice == 'flightaware':
 	        falink = 'https://flightaware.com/live/modes/' + row[0].lower() + '/ident/' + row[11].strip() + '/redirect'
-	     elif trackservice == 'adsbexchange':
-	        # format example: https://globe.adsbexchange.com/?icao=a4a567&lat=42.397&lon=-71.177&zoom=12.0&showTrace=2020-08-12
-                falink = 'https://globe.adsbexchange.com/?icao='  + row[0].lower() + '&lat=' + str(lat) + '&lon=' + str(lon) + '&zoom=12&showTrace=' + row[4][0:4] + '-' + row[4][5:7] + '-' + row[4][8:10]
-
-             records[np.where(records == row[0])[0][0]][6] = falink.strip()
+	  if trackservice == 'adsbexchange':
+	      # format example: https://globe.adsbexchange.com/?icao=a4a567&lat=42.397&lon=-71.177&zoom=12.0&showTrace=2020-08-12
+              falink = 'https://globe.adsbexchange.com/?icao='  + row[0].lower() + '&lat=' + str(lat) + '&lon=' + str(lon) + '&zoom=12&showTrace=' + row[4][0:4] + '-' + row[4][5:7] + '-' + row[4][8:10]
+          records[np.where(records == row[0])[0][0]][6] = falink.strip()
 	  # replace "LastHeard" by the time in this row:
           records[np.where(records == row[0])[0][0]][3] = row[4] + ' ' + row[5][:8]
           # only replace the lowest altitude if it's smaller than what we had before
@@ -169,7 +168,7 @@ def main(argv):
 
            if trackservice == 'flightaware':
               falink = 'https://flightaware.com/live/modes/' + row[0].lower() + '/ident/' + row[11].strip() + '/redirect'
-           elif trackservice == 'adsbexchange':
+           if trackservice == 'adsbexchange':
               # format example: https://globe.adsbexchange.com/?icao=a4a567&lat=42.397&lon=-71.177&zoom=12.0&showTrace=2020-08-12
               falink = 'https://globe.adsbexchange.com/?icao='  + row[0].lower() + '&lat=' + str(lat) + '&lon=' + str(lon) + '&zoom=12&showTrace=' + row[4][0:4] + '-' + row[4][5:7] + '-' + row[4][8:10]
 
