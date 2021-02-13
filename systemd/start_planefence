@@ -78,14 +78,15 @@ then
 	then
 			echo "[$APPNAME][$(date)] Warning: PF_TWEET is set to ON in .env file, but the Twitter account is not configured."
 			echo "[$APPNAME][$(date)] Sign up for a developer account at Twitter, create an app, and get a Consumer Key / Secret."
-			echo "[$APPNAME][$(date)] Then run this from the host machine: \"docker exec -it planefence /usr/share/planefence/config_tweeting.sh\""
+			echo "[$APPNAME][$(date)] Then run this from the host machine: \"docker exec -it planefence /root/config_tweeting.sh\""
 			echo "[$APPNAME][$(date)] For more information on how to sign up for a Twitter Developer Account, see this link:"
 			echo "[$APPNAME][$(date)] https://elfsight.com/blog/2020/03/how-to-get-twitter-api-key/"
 			echo "[$APPNAME][$(date)] PlaneFence will continue to start without Twitter functionality."
 			sed -i 's/\(^\s*PLANETWEET=\).*/\1/' /usr/share/planefence/planefence.conf
 	else
 			sed -i 's|\(^\s*PLANETWEET=\).*|\1'"$(sed -n '/profiles:/{n;p;}' /root/.twurlrc | tr -d '[:blank:][=:=]')"'|' /usr/share/planefence/planefence.conf
-	fi
+                        [[ "x$PF_TWATTRIB" != "x" ]] && sed -i 's|\(^\s*ATTRIB=\).*|\1'"$PF_TWATTRIB"'|' /usr/share/planefence/planefence.conf
+        fi
 fi
 # -----------------------------------------------------------------------------------
 #
