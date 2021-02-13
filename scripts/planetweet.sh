@@ -47,16 +47,16 @@
         TMPFILE=/tmp/planetweet.tmp
         TWEETON=yes
 
-	      CSVDIR=$OUTFILEDIR
-	      CSVNAMEBASE=$CSVDIR/planefence-
-	      CSVNAMEEXT=".csv"
-	      VERBOSE=1
-	      CSVTMP=/tmp/planetweet2-tmp.csv
+	CSVDIR=$OUTFILEDIR
+        CSVNAMEBASE=$CSVDIR/planefence-
+	CSVNAMEEXT=".csv"
+	VERBOSE=1
+	CSVTMP=/tmp/planetweet2-tmp.csv
 # MINTIME is the minimum time we wait before sending a tweet
 # to ensure that at least $MINTIME of audio collection (actually limited to the Planefence update runs in this period) to get a more accurste Loudness.
-	      MINTIME=200
-
-        [[ "x$PF_TWATTRIB" != "x" ]] && ATTRIB="%0A$PF_TWATTRIB%0A" || ATTRIB="%0A(C) 2021 Ramon F. Kolb - docker:kx1t/planefence%0A"
+	MINTIME=200
+# $ATTRIB contains the attribution line at the bottom of the tweet
+        [[ "x$ATTRIB" != "x" ]] && ATTRIB="(C) 2021 KX1T - docker:kx1t/planefence"
 # -----------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------
 # Additional variables:
@@ -132,33 +132,31 @@ then
 			XX="@${RECORD[1]}"
 			RECORD[1]=$XX
 
-      # Add attribution to the tweet:
-       TWEET+="$ATTRIB"
+                        # Add attribution to the tweet:
+                        TWEET+="%0A$ATTRIB%0A"
 
 			# And now, let's tweet!
-      if [ "$TWEETON" == "yes" ]; then
-
+                        if [ "$TWEETON" == "yes" ]
+                        then
 				# send a tweet and read the link to the tweet into ${LINK[1]}
-#        LINK=$(echo `$TWURLPATH/twurl -r "status=$TWEET" /1.1/statuses/update.json` | tee -a /tmp/tweets.log | jq '.entities."urls" | .[] | .url' | tr -d '\"')
 				LINK=$(echo `twurl -r "status=$TWEET" /1.1/statuses/update.json` | tee -a /tmp/tweets.log | jq '.entities."urls" | .[] | .url' | tr -d '\"')
-        LOG "LINK=$LINK"
-        echo "TWEET TEXT=$TWEET"
+                                LOG "LINK=$LINK"
+                                echo "TWEET TEXT=$TWEET"
 			else
 				LOG "(A tweet would have been sent but \$TWEETON=\"$TWEETON\")"
-      fi
+                        fi
 
 			# Add a reference to the tweet to RECORD[7] (if no audio is available) or RECORD[11] (if audio is available)
 			(( RECORD[7] < 0 )) && RECORD[12]="$LINK" || RECORD[7]="$LINK"
                         # LOG "Tweet sent!"
 			LOG "TWURL results: $LINK"
-
 		else
 			LOG "Assessing ${RECORD[0]}: ${RECORD[1]:0:1}; diff=$TIMEDIFF secs; Skipping: either already tweeted, or within $MINTIME secs."
 		fi
 
 		# Now write everything back to $CSVTMP
 		( IFS=','; echo "${RECORD[*]}" >> "$CSVTMP" )
-		 LOG "The record now contains $(IFS=','; echo ${RECORD[*]})"
+		LOG "The record now contains $(IFS=','; echo ${RECORD[*]})"
 
 
 	done < "$CSVFILE"
