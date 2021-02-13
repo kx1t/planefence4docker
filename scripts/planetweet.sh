@@ -56,7 +56,7 @@
 # to ensure that at least $MINTIME of audio collection (actually limited to the Planefence update runs in this period) to get a more accurste Loudness.
 	MINTIME=200
 # $ATTRIB contains the attribution line at the bottom of the tweet
-        [[ "x$ATTRIB" != "x" ]] && ATTRIB="(C) 2021 KX1T - docker:kx1t/planefence"
+        [[ "x$ATTRIB" == "x" ]] && ATTRIB="(C) 2021 KX1T - docker:kx1t/planefence"
 # -----------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------
 # Additional variables:
@@ -120,11 +120,15 @@ then
                         # There is more data we could tweet, but we're a bit restricted in real estate on twitter.
                         (( RECORD[7] < 0 )) && TWEET+="${HEADR[8]}: ${RECORD[7]} dBFS%0A${HEADR[7]}: $(( RECORD[7] - RECORD[11] )) dB%0A"
 
+
+                        # Add attribution to the tweet:
+                        TWEET+="%0A$ATTRIB%0A"
+
                         # Now add the last field without title or training Newline
                         # Reason: this is a URL that Twitter reinterprets and previews on the web
                         # Also, the Newline at the end tends to mess with Twurl
 
-                        TWEET+="${RECORD[6]}%0A"
+                        TWEET+="${RECORD[6]}"
 
 			LOG "Assessing ${RECORD[0]}: ${RECORD[1]:0:1}; diff=$TIMEDIFF secs; Tweeting... msg body: $TWEET" 1
 
@@ -132,8 +136,6 @@ then
 			XX="@${RECORD[1]}"
 			RECORD[1]=$XX
 
-                        # Add attribution to the tweet:
-                        TWEET+="%0A$ATTRIB%0A"
 
 			# And now, let's tweet!
                         if [ "$TWEETON" == "yes" ]
