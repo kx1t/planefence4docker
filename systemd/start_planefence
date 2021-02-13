@@ -90,6 +90,13 @@ then
 fi
 # -----------------------------------------------------------------------------------
 #
+# Change the heatmap height and width if they are defined in the .env parameter file:
+[[ "x$PF_MAPHEIGHT" != "x" ]] && sed -i 's|\(^\s*HEATMAPHEIGHT=\).*|\1'"$PF_MAPHEIGHT"'|' /usr/share/planefence/planefence.conf
+[[ "x$PF_MAPWIDTH" != "x" ]] && sed -i 's|\(^\s*HEATMAPWIDTH=\).*|\1'"$PF_MAPWIDTH"'|' /usr/share/planefence/planefence.conf
+[[ "x$PF_MAPZOOM" != "x" ]] && sed -i 's|\(^\s*HEATMAPZOOM=\).*|\1'"$PF_MAPZOOM"'|' /usr/share/planefence/planefence.conf
+#
+# -----------------------------------------------------------------------------------
+#
 # Move the jscript files from the staging directory into the html directory.
 # this cannot be done at build time because the directory is exposed and it is
 # overwritten by the host at start of runtime

@@ -192,15 +192,15 @@ DISTMTS=$(bc <<< "$DIST * 1609.34")
 # Now build the HTML file of the day:
 
 cat <<EOF >"$PLANEHEATHTML"
-<div id="map" style="width: 75vw; height: 40vh"></div>
+<div id="map" style="width: $HEATMAPWIDTH; height: $HEATMAPHEIGHT"></div>
 
 <script src="HeatLayer.js"></script>
 <script src="leaflet-heat.js"></script>
 <script src="planeheatdata-$(date -d $FENCEDATE +"%y%m%d").js"></script>
 <script>
-	var map = L.map('map').setView([$LAT, $LON], 13);
+	var map = L.map('map').setView([$LAT, $LON], $HEATMAPZOOM);
 	var tiles = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-	    attribution: '<a href="https://github.com/kx1t/planefence" target="_blank">PlaneFence</a> | <a href="https://github.com/Leaflet/Leaflet.heat">Leaflet.heat</a> | &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+	    attribution: '<a href="https://github.com/kx1t/planefence4docker" target="_blank">docker:kx1t/planefence</a> | <a href="https://github.com/Leaflet/Leaflet.heat">Leaflet.heat</a> | &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
 	    }).addTo(map);
 	addressPoints = addressPoints.map(function (p) { return [p[0], p[1]]; });
 	var heat = L.heatLayer(addressPoints, {minOpacity: 1, radius: 7, maxZoom: 14, blur: 11 }).addTo(map);
