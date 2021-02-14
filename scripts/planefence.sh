@@ -223,10 +223,15 @@ EOF
 
 			# if the flight number start with \@ then strip that in the HTML representation
 			# (\@ is written as the first character of the flight number by PlaneTweet if it has already tweeted the record)
-			if [ "${NEWVALUES[1]:0:1}" == "@" ]
+                        # Also, if the flight number is absent but $TRACKSERVICE==adsbexchange then insert a link after all
+                        
+			if  { [ "${NEWVALUES[1]}" == "@" ] || [ "${NEWVALUES[1]}" == "" ] } && [ "$TRACKSERVICE" == "adsbexchange" ]
 			then
+				printf "<td><a href=\"http://globe.adsbexchange.com/?icao=%s\" target=\"_blank\">link</a></td>\n" "${NEWVALUES[0]}" >> "$2"
+			elif [ "${NEWVALUES[1]:0:1}" == "@" ]
+                        then
 				printf "<td><a href=\"%s\" target=\"_blank\">%s</a></td>\n" "${NEWVALUES[6]}" "${NEWVALUES[1]:1}" >> "$2"
-			else
+                        else
 				printf "<td><a href=\"%s\" target=\"_blank\">%s</a></td>\n" "${NEWVALUES[6]}" "${NEWVALUES[1]}" >> "$2"
 			fi
 
