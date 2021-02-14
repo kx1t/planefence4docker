@@ -225,7 +225,7 @@ EOF
 			# (\@ is written as the first character of the flight number by PlaneTweet if it has already tweeted the record)
                         # Also, if the flight number is absent but $TRACKSERVICE==adsbexchange then insert a link after all
                         
-			if  { [ "${NEWVALUES[1]}" == "@" ] || [ "${NEWVALUES[1]}" == "" ] } && [ "$TRACKSERVICE" == "adsbexchange" ]
+			if  { [ "${NEWVALUES[1]}" == "@" ] || [ "${NEWVALUES[1]}" == "" ]; } && [ "$TRACKSERVICE" == "adsbexchange" ]
 			then
 				printf "<td><a href=\"http://globe.adsbexchange.com/?icao=%s\" target=\"_blank\">link</a></td>\n" "${NEWVALUES[0]}" >> "$2"
 			elif [ "${NEWVALUES[1]:0:1}" == "@" ]
