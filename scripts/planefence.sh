@@ -227,7 +227,7 @@ EOF
                         
 			if  { [ "${NEWVALUES[1]}" == "@" ] || [ "${NEWVALUES[1]}" == "" ]; } && [ "$TRACKSERVICE" == "adsbexchange" ]
 			then
-				printf "<td><a href=\"http://globe.adsbexchange.com/?icao=%s\" target=\"_blank\">link</a></td>\n" "${NEWVALUES[0]}" >> "$2"
+                                printf "<td><a href=\"http://globe.adsbexchange.com/?icao=%s&showTrace=%s\" target=\"_blank\">link</a></td>\n" "${NEWVALUES[0]}" "$(date -d ${NEWVALUES[2]::10} +%Y-%m-%d)" >> "$2"
 			elif [ "${NEWVALUES[1]:0:1}" == "@" ]
                         then
 				printf "<td><a href=\"%s\" target=\"_blank\">%s</a></td>\n" "${NEWVALUES[6]}" "${NEWVALUES[1]:1}" >> "$2"
