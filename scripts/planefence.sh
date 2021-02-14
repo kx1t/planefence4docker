@@ -226,8 +226,9 @@ EOF
                         # Also, if the flight number is absent but $TRACKSERVICE==adsbexchange then insert a link after all
                         
 			if  { [ "${NEWVALUES[1]}" == "@" ] || [ "${NEWVALUES[1]}" == "" ]; } && [ "$TRACKSERVICE" == "adsbexchange" ]
-			then
-                                printf "<td><a href=\"http://globe.adsbexchange.com/?icao=%s&showTrace=%s\" target=\"_blank\">link</a></td>\n" "${NEWVALUES[0]}" "$(date -d ${NEWVALUES[2]::10} +%Y-%m-%d)" >> "$2"
+			then     date -u -d @$(date  -d "2021/02/14 22:01:37" +%s) +%Y-%m-%d
+                                # printf "<td><a href=\"http://globe.adsbexchange.com/?icao=%s&showTrace=%s\" target=\"_blank\">link</a></td>\n" "${NEWVALUES[0]}" "$(date -d ${NEWVALUES[2]::10} +%Y-%m-%d)" >> "$2"
+                                printf "<td><a href=\"http://globe.adsbexchange.com/?icao=%s&showTrace=%s\" target=\"_blank\">link</a></td>\n" "${NEWVALUES[0]}" "$(date -u -d @`date -d \"${NEWVALUES[2]}\" +%s` +%Y-%m-%d)" >> "$2"
 			elif [ "${NEWVALUES[1]:0:1}" == "@" ]
                         then
 				printf "<td><a href=\"%s\" target=\"_blank\">%s</a></td>\n" "${NEWVALUES[6]}" "${NEWVALUES[1]:1}" >> "$2"
