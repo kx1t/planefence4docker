@@ -626,10 +626,10 @@ cat <<EOF >"$OUTFILEHTMTMP"
 # are always welcome. Join me at the GitHub link shown below, or via email
 # at kx1t (at) amsat (dot) org.
 #
-# Copyright 2020 Ramon F. Kolb - licensed under the terms and conditions
+# Copyright 2020, 2021 Ramon F. Kolb - licensed under the terms and conditions
 # of GPLv3. The terms and conditions of this license are included with the Github
 # distribution of this package, and are also available here:
-# https://github.com/kx1t/planefence/
+# https://github.com/kx1t/planefence4docker/
 #
 # The package contains parts of, links to, and modifications or derivatives to the following:
 # Dump1090.Socket30003 by Ted Sluis: https://github.com/tedsluis/dump1090.socket30003
@@ -739,7 +739,7 @@ cat <<EOF >>"$OUTFILEHTMTMP"
 EOF
 
 # Write some extra text if NOISE data is present
-if (( MAXFIELDS > 7 ))
+if (( MAXFIELDS > 8 ))
 then
 	cat <<EOF >>"$OUTFILEHTMTMP"
 	<section style="border: none; margin: 0; padding: 0; font: 12px/1.4 'Helvetica Neue', Arial, sans-serif;">
